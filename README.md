@@ -22,6 +22,7 @@ Features
 * support of 
     - `text/*` MIME-typed files
     - ZIP archives
+    - tar archives
 * portable \*nix/Windows
 
 
@@ -30,17 +31,18 @@ Features
 * support of
     - PDFs
     - DOC(X), XLS(X), PPT(X); Open/LibreOffice equivalents
-    - (compressed) archives
+    - compressed files
 * detection of encrypted files
 
 Usage
 ------------
 
 ```Python
-./blueflower.py [path]
+make install
+blueflowery [path]
 ```
 
-Results are written to a file `results-YYYYMMDDhhmmss`.
+Results are written to a file `blueflower-YYYYMMDDhhmmss`.
 
 *WARNING*: no limit is set on the number of files processed.
 
@@ -49,7 +51,6 @@ Dependencies
 ------------
 
 * [python-magic](https://github.com/ahupp/python-magic)
-* [pdfminer](https://github.com/euske/pdfminer)
 
 
 License
