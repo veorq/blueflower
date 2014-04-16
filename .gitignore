@@ -1,0 +1,7 @@
+build/
+dist/
+examples/
+blueflower-2*
+blueflower.egg-info/
+blueflower/*.pyc
+blueflower/modules/*.pyc
