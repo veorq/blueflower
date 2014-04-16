@@ -1,8 +1,8 @@
 blueflower
 ==========
 
-blueflower looks for secrets such as private keys or passwords in a file
-structure.
+blueflower is a simple tool that looks for secrets such as private keys
+or passwords in a file structure.
 Interesting files are detected using heuristics on their names and on
 their content.
 blueflower prioritizes speed, hence there may be a lot of false
@@ -39,7 +39,7 @@ Usage
 
 ```Python
 make install
-blueflowery [path]
+blueflower [directory]
 ```
 
 Results are written to a file `blueflower-YYYYMMDDhhmmss`.
