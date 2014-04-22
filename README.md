@@ -19,10 +19,12 @@ expected and it may destroy your computer. Use at your own risk.
 Features
 ------------
 
-* support of 
+* support of the following types of files (and combinations thereof)
     - `text/*` MIME-typed files
     - ZIP archives
     - tar archives
+    - gzip compressed files
+    - bzip2 compressed files
 * portable \*nix/Windows
 
 
