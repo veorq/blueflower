@@ -43,14 +43,14 @@ def zip_do_zip(azip, afile):
         filename =  os.path.basename(member).lower()
         res = infilename.search(filename)
         if res:
-            log('SECRET? %s in %s:%s' % \
+            log('SECRET: %s in %s:%s' % \
                 (res.group(), afile, member))
 
         # check file content, calling other modules
         data = azip.read(member)
         (ftype, keep) = types_data(data)
         if keep:
-            do_data(ftype, data, afile)
+            do_data(ftype, data, afile+':'+member)
 
 
 def zip_do_data(data, afile):
@@ -58,16 +58,17 @@ def zip_do_data(data, afile):
     try:
         azip = zipfile.ZipFile(filelike)
     except zipfile.BadZipfile:
-        log('BadZipFile: %s' % afile)
+        log('zipfile.BadZipFile: %s' % afile)
         return
     zip_do_zip(azip, afile)
+    azip.close()
 
 
 def zip_do_file(afile):
     try:
         azip = zipfile.ZipFile(afile)
     except zipfile.BadZipfile:
-        log('BadZipFile: %s' % afile)
+        log('zipfile.BadZipFile: %s' % afile)
         return
     zip_do_zip(azip, afile)
     azip.close()

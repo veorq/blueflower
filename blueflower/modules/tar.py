@@ -43,7 +43,7 @@ def tar_do_tar(atar, afile):
         filename = os.path.basename(member.name).lower()
         res = infilename.search(filename)
         if res:
-            log('SECRET? %s in %s:%s' % \
+            log('SECRET: %s in %s:%s' % \
                 (res.group(), afile, member.name))
 
         # check file content, calling other modules
@@ -58,16 +58,23 @@ def tar_do_data(data, afile):
     try:
         atar = tarfile.open(fileobj=filelike)
     except tarfile.TarError:
-        log('TarError: %s' % afile)
+        log('tarfile.TarError: %s' % afile)
+        return
+    except tarfile.ReadError:
+        log('tarfile.ReadError: %s' % afile)
         return
     tar_do_tar(atar, afile)
+    atar.close()
 
 
 def tar_do_file(afile):
     try:
         atar = tarfile.open(afile)
     except tarfile.TarError:
-        log('TarError: %s' % afile)
+        log('tarfile.TarError: %s' % afile)
+        return
+    except tarfile.ReadError:
+        log('tarfile.ReadError: %s' % afile)
         return
     tar_do_tar(atar, afile)
     atar.close()

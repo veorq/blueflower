@@ -1,4 +1,4 @@
-# text.py
+# bzip2.py
 #
 # This file is part of blueflower.
 # 
@@ -19,28 +19,42 @@
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
-import re
+import io
+import os
+import bz2
 
-from blueflower.settings import INFILE
+from blueflower.do import do_data
+from blueflower.types import types_data
 from blueflower.utils import log
 
-
-def text_do_data(data, afile):
-    buf = data.lower()
-    infile = re.compile('|'.join(INFILE)) 
-    res = infile.search(buf)
-    if res:
-        log('SECRET: %s in %s' % (res.group(), afile))
-
-
-def text_do_file(afile):
+# except when reading the file
+def bzip2_do_bzip2(abzip2, afile):
+    """abzip2:raw bytes, afile:source file name"""
     try:
-        fid = open(afile, 'r') 
+        data = bz2.decompress(abzip2)
     except IOError:
         log('IOError: %s' % afile)
         return
-    data = fid.read()
+    (ftype, keep) = types_data(data)
+    if keep:
+        # strip any .bz2 extension 
+        (root, ext) = os.path.splitext(afile)
+        if ext.lower() == '.bz2':
+            do_data(ftype, data, afile+':'+root)
+        else:
+            do_data(ftype, data, afile)
+
+
+def bzip2_do_data(data, afile):
+    bzip2_do_bzip2(data, afile)
+
+
+def bzip2_do_file(afile):
+    try:
+        fid = open(afile)
+        abzip2 = fid.read()
+    except IOError:
+        log('IOError: %s' % afile)
+        return
+    bzip2_do_bzip2(abzip2, afile)
     fid.close()
-    text_do_data(data, afile)
-
-

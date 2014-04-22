@@ -45,7 +45,7 @@ def select(directory):
 
             res = infilename.search(afile.lower())
             if res:
-                log('SECRET? %s in %s' % (res.group(), fabs))
+                log('SECRET: %s in %s' % (res.group(), fabs))
 
             (ftype, keep) = types_file(fabs)
 

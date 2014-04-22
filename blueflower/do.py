@@ -20,7 +20,15 @@
 
 
 def do_data(ftype, data, afile):
-    if ftype == 'tar': 
+    if ftype == 'other':
+        return
+    elif ftype == 'bzip2': 
+        from blueflower.modules.bzip2 import bzip2_do_data
+        bzip2_do_data(data, afile)
+    elif ftype == 'gz': 
+        from blueflower.modules.gz import gz_do_data
+        gz_do_data(data, afile)
+    elif ftype == 'tar': 
         from blueflower.modules.tar import tar_do_data
         tar_do_data(data, afile)
     elif ftype == 'text': 
@@ -32,7 +40,15 @@ def do_data(ftype, data, afile):
 
 
 def do_file(ftype, afile):
-    if ftype == 'tar': 
+    if ftype == 'other':
+        return
+    elif ftype == 'bzip2': 
+        from blueflower.modules.bzip2 import bzip2_do_file
+        bzip2_do_file(afile)
+    elif ftype == 'gz': 
+        from blueflower.modules.gz import gz_do_file
+        gz_do_file(afile)
+    elif ftype == 'tar': 
         from blueflower.modules.tar import tar_do_file
         tar_do_file(afile)
     elif ftype == 'text': 

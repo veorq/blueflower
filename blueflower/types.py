@@ -21,30 +21,37 @@
 
 import magic
 
-from .utils import log
+from blueflower.utils import log
 
 """
 types handles:
 
+'other'    unknown or unsupported
+
+'bzip2'    bzip2
+'gz'       gzip
 'pdf'	   pdf
 'tar'      tar archive (potentially tar.gz and tar.bz2,
            but those are processed as gz and bz2 first)
 'text'	   text/* (txt, html, csv, xml, etc.)
-'other'    unknown or unsupported
 'zip'      zip
 """
 
 
 def types_filter(mime):
     (mimetype, mimesubtype) = mime.split('/')
+    if mimesubtype == 'x-bzip2':
+        return ('bzip2', True)
     if mimetype == 'text':
         return ('text', True)
     if mimesubtype == 'pdf':
         return ('pdf', True)
-    if mimesubtype == 'zip':
-        return ('zip', True)
+    if mimesubtype == 'x-gzip':
+        return ('gz', True)
     if mimesubtype == 'x-tar':
         return ('tar', True)
+    if mimesubtype == 'zip':
+        return ('zip', True)
     return ('other', False)
 
 
