@@ -40,7 +40,7 @@ Usage
 ------------
 
 ```Python
-make install
+sudo make install
 blueflower [directory]
 ```
 

@@ -19,15 +19,21 @@
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
+# case insensitive
 INFILE = (
+'begin certificate',
 'pass phrase',
 'passphrase',
 'password',
+'privatekey',
 'private key',
+'rsakeypair',
 'secret key',
+'secretkey',
 'sshhostkeys',
 )
 
+# case insensitive
 INFILENAME = (
 'connect.inc',      # sql
 'default.pass',     # dbman
