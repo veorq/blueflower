@@ -25,7 +25,7 @@ import bz2
 
 from blueflower.do import do_data
 from blueflower.types import types_data
-from blueflower.utils import log
+from blueflower.utils import log_error
 
 # except when reading the file
 def bzip2_do_bzip2(abzip2, afile):
@@ -33,7 +33,7 @@ def bzip2_do_bzip2(abzip2, afile):
     try:
         data = bz2.decompress(abzip2)
     except IOError:
-        log('IOError: %s' % afile)
+        log_error('IOError', afile)
         return
     (ftype, keep) = types_data(data)
     if keep:
@@ -54,7 +54,7 @@ def bzip2_do_file(afile):
         fid = open(afile)
         abzip2 = fid.read()
     except IOError:
-        log('IOError: %s' % afile)
+        log_error('IOError', afile)
         return
     bzip2_do_bzip2(abzip2, afile)
     fid.close()

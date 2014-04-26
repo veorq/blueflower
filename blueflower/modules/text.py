@@ -22,7 +22,7 @@
 import re
 
 from blueflower.settings import INFILE
-from blueflower.utils import log
+from blueflower.utils import log_secret
 
 
 def text_do_data(data, afile):
@@ -30,14 +30,14 @@ def text_do_data(data, afile):
     infile = re.compile('|'.join(INFILE)) 
     res = infile.search(buf)
     if res:
-        log('SECRET: %s in %s' % (res.group(), afile))
+        log_secret(res.group(), afile)
 
 
 def text_do_file(afile):
     try:
         fid = open(afile, 'r') 
     except IOError:
-        log('IOError: %s' % afile)
+        log_error('IOError', afile)
         return
     data = fid.read()
     fid.close()

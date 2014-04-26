@@ -27,7 +27,7 @@ import sys
 from blueflower.do       import do_file
 from blueflower.settings import INFILENAME, PROGRAM, SKIP
 from blueflower.types    import types_file
-from blueflower.utils    import log, timestamp
+from blueflower.utils    import log_comment, log_secret, log_selected, timestamp
 
 
 def select(directory):
@@ -45,13 +45,15 @@ def select(directory):
 
             res = infilename.search(afile.lower())
             if res:
-                log('SECRET: %s in %s' % (res.group(), fabs))
+                log_secret(res.group(), fabs)
 
             (ftype, keep) = types_file(fabs)
 
             if keep: 
                 selected.append((fabs, ftype))
-                log('SELECTED: %s' % fabs)
+                log_selected(ftype, fabs)
+
+            # TODO: encrypted (add third return to types_file
 
     return selected
 
@@ -77,16 +79,16 @@ def main(args=sys.argv[1:]):
         return 1
 
     logfile = '%s-%s' % (PROGRAM, timestamp())
-    print 'LOG to %s' % logfile
+    print 'logging to %s' % logfile
     logging.basicConfig(filename=logfile, 
                         format='%(message)s',
                         level=logging.INFO)
 
-    log('# %s: starting %s' % (timestamp(), PROGRAM) )
+    log_comment('starting %s' % PROGRAM)
     selected = select(arg)
-    log('# %s: %d files selected' % (timestamp(), len(selected)) )
+    log_comment('%d files selected' % len(selected))
     process(selected)
-    log('# %s: completed' % timestamp() )
+    log_comment('processing completed')
 
 
 if __name__ == '__main__':

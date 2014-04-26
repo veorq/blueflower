@@ -25,7 +25,7 @@ import gzip
 
 from blueflower.do import do_data
 from blueflower.types import types_data
-from blueflower.utils import log
+from blueflower.utils import log_error
 
 # except when reading the file
 def gz_do_gz(agz, afile):
@@ -33,7 +33,7 @@ def gz_do_gz(agz, afile):
     try:
         data = agz.read()
     except IOError:
-        log('IOError: %s' % afile)
+        log_error('IOError', afile)
         return
     (ftype, keep) = types_data(data)
     if keep:
@@ -50,7 +50,7 @@ def gz_do_data(data, afile):
     try:
         agz = gzip.GzipFile(fileobj=filelike)
     except IOError:
-        log('IOError: %s' % afile)
+        log_error('IOError', afile)
         return
     gz_do_gz(agz, afile)
     agz.close()
@@ -60,7 +60,7 @@ def gz_do_file(afile):
     try:
         agz = gzip.GzipFile(afile)
     except IOError:
-        log('IOError: %s' % afile)
+        log_error('IOError', afile)
         return
     gz_do_gz(agz, afile)
     agz.close()

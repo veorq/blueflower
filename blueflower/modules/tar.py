@@ -27,7 +27,7 @@ import tarfile
 from blueflower.do import do_data
 from blueflower.settings import INFILENAME
 from blueflower.types import types_data
-from blueflower.utils import log
+from blueflower.utils import log_error, log_secret
 
 
 def tar_do_tar(atar, afile):
@@ -43,8 +43,7 @@ def tar_do_tar(atar, afile):
         filename = os.path.basename(member.name).lower()
         res = infilename.search(filename)
         if res:
-            log('SECRET: %s in %s:%s' % \
-                (res.group(), afile, member.name))
+            log_secret(res.group(), afile+':'+member.name)
 
         # check file content, calling other modules
         data = atar.extractfile(member).read()
@@ -58,10 +57,10 @@ def tar_do_data(data, afile):
     try:
         atar = tarfile.open(fileobj=filelike)
     except tarfile.TarError:
-        log('tarfile.TarError: %s' % afile)
+        log_error('tarfile.TarError', afile)
         return
     except tarfile.ReadError:
-        log('tarfile.ReadError: %s' % afile)
+        log_error('tarfile.ReadError', afile)
         return
     tar_do_tar(atar, afile)
     atar.close()
@@ -71,10 +70,10 @@ def tar_do_file(afile):
     try:
         atar = tarfile.open(afile)
     except tarfile.TarError:
-        log('tarfile.TarError: %s' % afile)
+        log_error('tarfile.TarError', afile)
         return
     except tarfile.ReadError:
-        log('tarfile.ReadError: %s' % afile)
+        log_error('tarfile.ReadError', afile)
         return
     tar_do_tar(atar, afile)
     atar.close()

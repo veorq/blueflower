@@ -27,7 +27,7 @@ import zipfile
 from blueflower.do import do_data
 from blueflower.settings import INFILENAME
 from blueflower.types import types_data
-from blueflower.utils import log
+from blueflower.utils import log_error, log_secret
 
 
 def zip_do_zip(azip, afile):
@@ -43,8 +43,7 @@ def zip_do_zip(azip, afile):
         filename =  os.path.basename(member).lower()
         res = infilename.search(filename)
         if res:
-            log('SECRET: %s in %s:%s' % \
-                (res.group(), afile, member))
+            log_secret(res.group(), afile+':'+member)
 
         # check file content, calling other modules
         data = azip.read(member)
@@ -58,7 +57,7 @@ def zip_do_data(data, afile):
     try:
         azip = zipfile.ZipFile(filelike)
     except zipfile.BadZipfile:
-        log('zipfile.BadZipFile: %s' % afile)
+        log_error('zipfile.BadZipFile', afile)
         return
     zip_do_zip(azip, afile)
     azip.close()
@@ -68,7 +67,7 @@ def zip_do_file(afile):
     try:
         azip = zipfile.ZipFile(afile)
     except zipfile.BadZipfile:
-        log('zipfile.BadZipFile: %s' % afile)
+        log_error('zipfile.BadZipFile', afile)
         return
     zip_do_zip(azip, afile)
     azip.close()

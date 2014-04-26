@@ -25,7 +25,27 @@ import time
 
 def log(s):
   logging.info(s)
-  print s
+
+
+def log_comment(comment):
+    log('# %s: %s' % (timestamp(), comment))
+
+
+def log_encrypted(ftype, filename):
+    log('ENCRYPTED, %s, %s' % (ftype, filename))
+
+
+def log_error(error, filename):
+    log('ERROR, %s, %s' % (error, filename))
+
+
+def log_secret(secret, filename):
+    log('SECRET, %s, %s' % (secret, filename))
+
+
+
+def log_selected(ftype, filename):
+    log('SELECTED, %s, %s' % (ftype, filename))
 
 
 def timestamp():
