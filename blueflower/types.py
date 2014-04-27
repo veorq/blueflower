@@ -31,6 +31,7 @@ types handles:
 'bzip2'    bzip2
 'gz'       gzip
 'pdf'	   pdf
+'rar'      rar
 'tar'      tar archive (potentially tar.gz and tar.bz2,
            but those are processed as gz and bz2 first)
 'text'	   text/* (txt, html, csv, xml, etc.)
@@ -42,17 +43,20 @@ def types_filter(mime):
     (mimetype, mimesubtype) = mime.split('/')
     if mimesubtype == 'x-bzip2':
         return ('bzip2', True)
-    if mimetype == 'text':
+    elif mimetype == 'text':
         return ('text', True)
-    if mimesubtype == 'pdf':
-        return ('pdf', True)
-    if mimesubtype == 'x-gzip':
+    elif mimesubtype == 'x-gzip':
         return ('gz', True)
-    if mimesubtype == 'x-tar':
+    elif mimesubtype == 'pdf':
+        return ('pdf', True)
+    elif mimesubtype == 'x-rar':
+        return ('rar', True)
+    elif mimesubtype == 'x-tar':
         return ('tar', True)
-    if mimesubtype == 'zip':
+    elif mimesubtype == 'zip':
         return ('zip', True)
-    return ('other', False)
+    else:
+        return ('other', False)
 
 
 def types_data( data ):

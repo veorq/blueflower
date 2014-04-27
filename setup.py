@@ -26,6 +26,7 @@ import blueflower
 
 requirements = [
     'python-magic>=0.4.6',
+    'rarfile>=2.6',
 ]
 
 setup(

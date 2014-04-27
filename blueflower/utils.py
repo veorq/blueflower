@@ -23,8 +23,8 @@ import logging
 import time
 
 
-def log(s):
-  logging.info(s)
+def log(message):
+    logging.info(message)
 
 
 def log_comment(comment):
@@ -49,4 +49,4 @@ def log_selected(ftype, filename):
 
 
 def timestamp():
-  return time.strftime("%Y%m%d%H%M%S", time.localtime())
+    return time.strftime("%Y%m%d%H%M%S", time.localtime())

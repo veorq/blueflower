@@ -22,7 +22,7 @@
 import re
 
 from blueflower.settings import INFILE
-from blueflower.utils import log_secret
+from blueflower.utils import log_secret, log_error
 
 
 def text_do_data(data, afile):

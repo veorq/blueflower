@@ -48,6 +48,9 @@ def do_file(ftype, afile):
     elif ftype == 'gz': 
         from blueflower.modules.gz import gz_do_file
         gz_do_file(afile)
+    elif ftype == 'rar': 
+        from blueflower.modules.rar import rar_do_file
+        rar_do_file(afile)
     elif ftype == 'tar': 
         from blueflower.modules.tar import tar_do_file
         tar_do_file(afile)

@@ -1,4 +1,4 @@
-# tar.py
+# rar.py
 #
 # This file is part of blueflower.
 # 
@@ -19,10 +19,9 @@
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
-import io
 import os
 import re
-import tarfile
+import rarfile
 
 from blueflower.do import do_data
 from blueflower.settings import INFILENAME
@@ -30,45 +29,37 @@ from blueflower.types import types_data
 from blueflower.utils import log_error, log_secret
 
 
-def tar_do_tar(atar, afile):
-    """ atar:TarFile, afile:source archive(s) name """
+def rar_do_rar(arar, afile):
+    """ arar:RarFile, afile:source archive(s) name """
     infilename = re.compile('|'.join(INFILENAME))
 
-    # iterate over TarInfo's
-    for member in atar.getmembers():
-        # only process files
-        if not member.isfile():
+    # iterate over infolist to detect directories
+    # (unlike zipfile, doesnt append '/' to dir names
+    for member in arar.infolist():
+        # sort directories out
+        if member.isdir():
             continue
         # check file name
-        filename = os.path.basename(member.name).lower()
+        filename =  os.path.basename(member.filename).lower()
         res = infilename.search(filename)
         if res:
-            log_secret(res.group(), afile+':'+member.name)
+            log_secret(res.group(), afile+':'+member.filename)
 
         # check file content, calling other modules
-        data = atar.extractfile(member).read()
+        data = arar.read(member)
         (ftype, keep) = types_data(data)
         if keep:
-            do_data(ftype, data, afile+':'+member.name)
+            do_data(ftype, data, afile+':'+member.filename)
 
 
-def tar_do_data(data, afile):
-    filelike = io.BytesIO(data)
+def rar_do_file(afile):
+    # fixes problems with default '\' separator
+    rarfile.PATH_SEP = '/'
     try:
-        atar = tarfile.open(fileobj=filelike)
-    except tarfile.TarError:
-        log_error('tarfile.TarError', afile)
+        arar = rarfile.RarFile(afile)
+    except rarfile.BadRarFile:
+        log_error('rarfile.BadRarFile', afile)
         return
-    tar_do_tar(atar, afile)
-    atar.close()
-
-
-def tar_do_file(afile):
-    try:
-        atar = tarfile.open(afile)
-    except tarfile.TarError:
-        log_error('tarfile.TarError', afile)
-        return
-    tar_do_tar(atar, afile)
-    atar.close()
+    rar_do_rar(arar, afile)
+    arar.close()
 

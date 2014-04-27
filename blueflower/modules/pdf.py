@@ -19,10 +19,4 @@
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
-import re
-from blueflower.utils import *
-
-
 # TODO: PDF support
-def pdf_scan(f):
-  pass
