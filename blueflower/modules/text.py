@@ -26,16 +26,20 @@ from blueflower.utils import log_secret, log_error
 
 
 def text_do_data(data, afile):
-    buf = data.lower()
-    infile = re.compile('|'.join(INFILE)) 
-    res = infile.search(buf)
-    if res:
-        log_secret(res.group(), afile)
+    text = data.lower()
+    regex = '|'.join(INFILE)
+    #infile = re.compile('|'.join(INFILE)) 
+    for match in re.finditer(regex, text):
+        log_secret(match.group(), afile)
+
+    #res = infile.search(buf)
+    #if res:
+    #    log_secret(res.group(), afile)
 
 
 def text_do_file(afile):
     try:
-        fid = open(afile, 'r') 
+        fid = open(afile) 
     except IOError:
         log_error('IOError', afile)
         return

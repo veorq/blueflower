@@ -28,6 +28,9 @@ def do_data(ftype, data, afile):
     elif ftype == 'gz': 
         from blueflower.modules.gz import gz_do_data
         gz_do_data(data, afile)
+    elif ftype == 'pdf': 
+        from blueflower.modules.pdf import pdf_do_data
+        pdf_do_data(data, afile)
     elif ftype == 'tar': 
         from blueflower.modules.tar import tar_do_data
         tar_do_data(data, afile)
@@ -51,6 +54,9 @@ def do_file(ftype, afile):
     elif ftype == 'rar': 
         from blueflower.modules.rar import rar_do_file
         rar_do_file(afile)
+    elif ftype == 'pdf': 
+        from blueflower.modules.pdf import pdf_do_file
+        pdf_do_file(afile)
     elif ftype == 'tar': 
         from blueflower.modules.tar import tar_do_file
         tar_do_file(afile)

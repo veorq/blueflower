@@ -18,5 +18,44 @@
 #
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
+import io
 
-# TODO: PDF support
+from blueflower.modules.text import text_do_data
+from blueflower.utils import log_error
+
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from pdfminer.pdfpage import PDFPage
+from cStringIO import StringIO
+
+
+def pdf_do_pdf(astream, afile):
+    rsrcmgr = PDFResourceManager()
+    retstr = StringIO()
+    codec = 'utf-8'
+    laparams = LAParams()
+    device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
+    interpreter = PDFPageInterpreter(rsrcmgr, device)
+    pagenos = set()
+    for page in PDFPage.get_pages(astream, pagenos, maxpages=0, password='', \
+                                  caching=True, check_extractable=True):
+        interpreter.process_page(page)
+    device.close()
+    text = retstr.getvalue()
+    retstr.close()
+    text_do_data(text, afile)
+
+
+def pdf_do_data(data, afile):
+    astream = io.BytesIO(data)
+    pdf_do_pdf(astream, afile)
+
+
+def pdf_do_file(afile):
+    try:
+        fid = open(afile)
+    except IOError:
+        log_error('IOError', afile)
+    pdf_do_pdf(fid, afile)
+    fid.close()

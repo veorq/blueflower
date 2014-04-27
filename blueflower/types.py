@@ -21,7 +21,7 @@
 
 import magic
 
-from blueflower.utils import log
+from blueflower.utils import log_error
 
 """
 types handles:
@@ -63,7 +63,7 @@ def types_data( data ):
     try:
         mime = magic.from_buffer(data, mime=True)
     except IOError:
-        log('IOError: type_data')
+        log_error('IOError', '_data')
         return ('other', False)
     return types_filter(mime)
 
@@ -72,7 +72,7 @@ def types_file( afile ):
     try:
         mime = magic.from_file(afile, mime=True)
     except IOError:
-        log('IOError: %s' % afile)
+        log_error('IOError', afile)
         return ('other', False)
     return types_filter(mime)
   

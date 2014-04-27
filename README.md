@@ -64,8 +64,9 @@ Dependencies
 ------------
 
 Python modules:
-* [python-magic](https://github.com/ahupp/python-magic)
-* [rarfile](https://pypi.python.org/pypi/rarfile/2.6)
+* [pdfminer](https://pypi.python.org/pypi/pdfminer/)
+* [python-magic](https://pypi.python.org/pypi/python-magic/)
+* [rarfile](https://pypi.python.org/pypi/rarfile/)
 
 Other:
 * `unrar` utility
