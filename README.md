@@ -18,6 +18,7 @@ Features
 ------------
 
 * support of the following types of files:
+    - PDF documents
     - `text/*` MIME-typed files
     - bzip2 compressed files
     - gzip compressed files
@@ -31,7 +32,7 @@ Features
 
 ### TODO
 
-* support of PDFs, \*Office documents
+* \*Office documents
 * flagging of encrypted archives
 * detection of encrypted files/containers
 * speed optimizations
