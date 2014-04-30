@@ -1,7 +1,7 @@
 blueflower
 ==========
 
-![logo][blueflower.jpg]
+![logo](blueflower.jpg)
 
 blueflower is a simple tool that looks for secrets such as private keys
 or passwords in a file structure.
