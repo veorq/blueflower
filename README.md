@@ -1,6 +1,8 @@
 blueflower
 ==========
 
+![logo][blueflower.jpg]
+
 blueflower is a simple tool that looks for secrets such as private keys
 or passwords in a file structure.
 Interesting files are detected using heuristics on their names and on
