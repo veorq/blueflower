@@ -19,7 +19,7 @@
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
-# case insensitive
+# regexes, case insensitive
 INFILE = (
 'begin certificate',
 'pass phrase',
@@ -33,30 +33,39 @@ INFILE = (
 'sshhostkeys',
 )
 
-# case insensitive
+# regexes, case insensitive
+# extensions \.* match names like *.pgd.backup etc.
+# signature
+# extensions of encrypted containers in types_from_extension
+# if extension is missing, type may be detected in types_from_signature
 INFILENAME = (
+'\.jks',            # java key store
+'\.kdb',            # keypass (matches .kdbx)
+'\.keychain',       # apple keychain
+'\.kwallet',        # kwallet
+'\.psafe3',         # passwordsafe
 'connect.inc',      # sql
-'default.pass',     # dbman
+'default\.pass',    # dbman
 'htaccess',         # apache/nginx
-'id_ecdsa',         # openssh
 'id_dsa',           # openssh
+'id_ecdsa',         # openssh
 'id_rsa',           # openssh
 'localconf',        # typo3
 'localsettings',    # wikimedia
-'passwd',           # *nix & htpasswd
 'passlist',         # misc
+'passwd',           # *nix & htpasswd
 'passwords',        # misc
 'pgplog',           # pgp
-'pgppolicy.xml',    # pgp
-'pgpprefs.xml',     # pgp
+'pgppolicy\.xml',   # pgp
+'pgpprefs\.xml',    # pgp
 'private',          # misc
 'secret',           # misc
 'secring',          # gnupg
 'sftp-config',      # sftp
 'shadow',           # *nix
-'spwd.bd',          # freebsd
-'users.xml',        # .net
-'wallet.dat',       # bitcoin
+'spwd\.bd',         # freebsd
+'users\.xml',       # .net
+'wallet\.dat',      # bitcoin
 )
 
 PROGRAM = 'blueflower'
