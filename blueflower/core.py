@@ -23,6 +23,7 @@ import logging
 import os
 import re
 import sys
+import threading
 
 from blueflower.do       import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
@@ -71,16 +72,29 @@ def usage():
     print 'usage: %s directory' % PROGRAM
 
 
+class blueflowerThread(threading.Thread):
+    def __init__(self, path, index):
+        self.path = path
+        self.index = index
+        super(blueflowerThread, self).__init__()
+
+    def run(self):
+        selected = select(self.path)
+        log_comment('thread %d: %d files selected' % (self.index, len(selected)))
+        process(selected)
+        log_comment('thread %d: processing completed' % self.index)
+
+
 def main(args=sys.argv[1:]):
     if (len(args) < 1):
         usage()
         return 1
-    arg = args[0]
 
-    if not os.path.exists(arg):
-        print '%s does not exist' % arg
-        usage()
-        return 1
+    for arg in args:
+        if not os.path.exists(arg):
+            print '%s does not exist' % arg
+            usage()
+            return 1
 
     logfile = '%s-%s' % (PROGRAM, timestamp())
     print 'logging to %s' % logfile
@@ -89,10 +103,21 @@ def main(args=sys.argv[1:]):
                         level=logging.INFO)
 
     log_comment('starting %s' % PROGRAM)
-    selected = select(arg)
-    log_comment('%d files selected' % len(selected))
-    process(selected)
-    log_comment('processing completed')
+
+    bfthreads = []
+    for i in xrange(len(args)):
+        arg = args[i]
+        log_comment('creating thread %d: %s' % (i, arg))
+        thread = blueflowerThread(arg, i)
+        bfthreads.append(thread)
+
+    log_comment('%d threads created, now starting' % len(bfthreads))
+
+    for thread in bfthreads:
+        thread.start()
+        
+    for thread in bfthreads:
+        thread.join()
 
 
 if __name__ == '__main__':
