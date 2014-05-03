@@ -20,12 +20,16 @@ Features
 ------------
 
 * multithreading
-* support of the following types of files:
+* detection of various key and password containers (SSH, Apple keychain,
+  Java KeyStore, etc.) and other interesting files (Bitcoin wallets, PGP
+  policies, etc.)
+* detection of encrypted containers (Truecrypt, PGP Disks, GnuPG files, etc.)
+* search in the content of the following types of files:
     - `text/*` MIME-typed files
     - archives RAR, tar, ZIP
     - compressed files bzip2, gzip
     - encrypted containers/archives: PGP/GPG, Truecrypt, RAR, ZIP
-    - documents PDF
+    - PDF documents
 * support of nested archives and compressed files (except for nested RARs)
 * portable \*nix/Windows
 * CSV output
