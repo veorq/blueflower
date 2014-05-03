@@ -19,6 +19,7 @@ expected and it may destroy your computer. Use at your own risk.
 Features
 ------------
 
+* multithreading
 * support of the following types of files:
     - `text/*` MIME-typed files
     - archives RAR, tar, ZIP
@@ -35,7 +36,6 @@ Features
 * \*Office documents
 * more secrecy heuristics
 * more type recognition heuristics
-* multithreading
 * speed optimizations
 
 
@@ -50,8 +50,9 @@ sudo make
 
 Execution:
 ```
-blueflower [directory]
+blueflower [directory1] [directory2] ...
 ```
+A new thread is created for each directory passed as argument.
 
 Results are written to a file `blueflower-YYYYMMDDhhmmss`.
 
