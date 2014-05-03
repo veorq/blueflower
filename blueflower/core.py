@@ -27,7 +27,8 @@ import sys
 from blueflower.do       import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
 from blueflower.types    import types_file
-from blueflower.utils    import log_comment, log_encrypted, log_secret, log_selected, timestamp
+from blueflower.utils    import log_comment, log_encrypted, log_secret, \
+                                log_selected, timestamp
 
 
 def select(directory):
@@ -78,7 +79,7 @@ def main(args=sys.argv[1:]):
 
     if not os.path.exists(arg):
         print '%s does not exist' % arg
-        usage(arg)
+        usage()
         return 1
 
     logfile = '%s-%s' % (PROGRAM, timestamp())

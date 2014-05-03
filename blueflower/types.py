@@ -48,8 +48,7 @@ def types_from_mime(mime):
 def types_from_extension(filename):
     if filename == '':
         return (constants.BF_UNKNOWN, False)
-    # get extension
-    (root, ext) = os.path.splitext(filename)
+    (_, ext) = os.path.splitext(filename)
     if ext in constants.EXTENSIONS:
         return (constants.EXTENSIONS[ext], True)
     return (constants.BF_UNKNOWN, False)

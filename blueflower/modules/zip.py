@@ -35,8 +35,8 @@ def zip_do_zip(azip, afile):
     # test if encrypted
     try:
         azip.testzip()
-    except RuntimeError as e:
-        if 'encrypted' in str(e):
+    except RuntimeError as exception:
+        if 'encrypted' in str(exception):
             log_encrypted(BF_ZIP, afile)
             return
 
