@@ -20,13 +20,11 @@ Features
 ------------
 
 * support of the following types of files:
-    - PDF documents
     - `text/*` MIME-typed files
-    - bzip2 compressed files
-    - gzip compressed files
-    - RAR archives
-    - tar archives
-    - ZIP archives
+    - archives RAR, tar, ZIP
+    - compressed files bzip2, gzip
+    - encrypted containers/archives: PGP/GPG, Truecrypt, RAR, ZIP
+    - documents PDF
 * support of nested archives and compressed files (except for nested RARs)
 * portable \*nix/Windows
 * CSV output
@@ -35,8 +33,9 @@ Features
 ### TODO
 
 * \*Office documents
-* flagging of encrypted archives
-* detection of encrypted files/containers
+* more secrecy heuristics
+* more type recognition heuristics
+* multithreading
 * speed optimizations
 
 
@@ -47,6 +46,7 @@ Installation:
 ```
 sudo make
 ```
+(omit `sudo` on Windows)
 
 Execution:
 ```
