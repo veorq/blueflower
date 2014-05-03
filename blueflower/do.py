@@ -18,52 +18,54 @@
 #
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
+import blueflower.constants as constants
+
 
 def do_data(ftype, data, afile):
-    if ftype == 'other':
+    if ftype == constants.BF_UNKNOWN:
         return
-    elif ftype == 'bzip2': 
+    elif ftype == constants.BF_BZIP2: 
         from blueflower.modules.bzip2 import bzip2_do_data
         bzip2_do_data(data, afile)
-    elif ftype == 'gz': 
+    elif ftype == constants.BF_GZ: 
         from blueflower.modules.gz import gz_do_data
         gz_do_data(data, afile)
-    elif ftype == 'pdf': 
+    elif ftype == constants.BF_PDF: 
         from blueflower.modules.pdf import pdf_do_data
         pdf_do_data(data, afile)
-    elif ftype == 'tar': 
+    elif ftype == constants.BF_TAR: 
         from blueflower.modules.tar import tar_do_data
         tar_do_data(data, afile)
-    elif ftype == 'text': 
+    elif ftype == constants.BF_TEXT: 
         from blueflower.modules.text import text_do_data
         text_do_data(data, afile)
-    elif ftype == 'zip': 
+    elif ftype == constants.BF_ZIP: 
         from blueflower.modules.zip import zip_do_data
         zip_do_data(data, afile)
 
 
 def do_file(ftype, afile):
-    if ftype == 'other':
+    if ftype == constants.BF_UNKNOWN:
         return
-    elif ftype == 'bzip2': 
+    elif ftype == constants.BF_BZIP2: 
         from blueflower.modules.bzip2 import bzip2_do_file
         bzip2_do_file(afile)
-    elif ftype == 'gz': 
+    elif ftype == constants.BF_GZ: 
         from blueflower.modules.gz import gz_do_file
         gz_do_file(afile)
-    elif ftype == 'rar': 
+    elif ftype == constants.BF_RAR: 
         from blueflower.modules.rar import rar_do_file
         rar_do_file(afile)
-    elif ftype == 'pdf': 
+    elif ftype == constants.BF_PDF: 
         from blueflower.modules.pdf import pdf_do_file
         pdf_do_file(afile)
-    elif ftype == 'tar': 
+    elif ftype == constants.BF_TAR: 
         from blueflower.modules.tar import tar_do_file
         tar_do_file(afile)
-    elif ftype == 'text': 
+    elif ftype == constants.BF_TEXT: 
         from blueflower.modules.text import text_do_file
         text_do_file(afile)
-    elif ftype == 'zip': 
+    elif ftype == constants.BF_ZIP: 
         from blueflower.modules.zip import zip_do_file
         zip_do_file(afile)
 

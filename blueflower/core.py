@@ -25,9 +25,9 @@ import re
 import sys
 
 from blueflower.do       import do_file
-from blueflower.settings import INFILENAME, PROGRAM, SKIP
+from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
 from blueflower.types    import types_file
-from blueflower.utils    import log_comment, log_secret, log_selected, timestamp
+from blueflower.utils    import log_comment, log_encrypted, log_secret, log_selected, timestamp
 
 
 def select(directory):
@@ -50,10 +50,13 @@ def select(directory):
             (ftype, keep) = types_file(fabs)
 
             if keep: 
-                selected.append((fabs, ftype))
-                log_selected(ftype, fabs)
-
-            # TODO: encrypted (add third return to types_file
+                # if encrypted, log and do not process
+                if ftype in ENCRYPTED:
+                    log_encrypted(ftype, afile)
+                # otherwise, select file for processing
+                else:
+                    selected.append((fabs, ftype))
+                    log_selected(ftype, fabs)
 
     return selected
 

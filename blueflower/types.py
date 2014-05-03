@@ -19,60 +19,79 @@
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
+import os
 import magic
 
 from blueflower.utils import log_error
-
-"""
-types handles:
-
-'other'    unknown or unsupported
-
-'bzip2'    bzip2
-'gz'       gzip
-'pdf'	   pdf
-'rar'      rar
-'tar'      tar archive (potentially tar.gz and tar.bz2,
-           but those are processed as gz and bz2 first)
-'text'	   text/* (txt, html, csv, xml, etc.)
-'zip'      zip
-"""
+import blueflower.constants as constants
 
 
-def types_filter(mime):
+def types_from_mime(mime):
     (mimetype, mimesubtype) = mime.split('/')
     if mimesubtype == 'x-bzip2':
-        return ('bzip2', True)
+        return (constants.BF_BZIP2, True)
     elif mimetype == 'text':
-        return ('text', True)
+        return (constants.BF_TEXT, True)
     elif mimesubtype == 'x-gzip':
-        return ('gz', True)
+        return (constants.BF_GZ, True)
     elif mimesubtype == 'pdf':
-        return ('pdf', True)
+        return (constants.BF_PDF, True)
     elif mimesubtype == 'x-rar':
-        return ('rar', True)
+        return (constants.BF_RAR, True)
     elif mimesubtype == 'x-tar':
-        return ('tar', True)
+        return (constants.BF_TAR, True)
     elif mimesubtype == 'zip':
-        return ('zip', True)
-    else:
-        return ('other', False)
+        return (constants.BF_ZIP, True)
+    return (constants.BF_UNKNOWN, False)
 
 
-def types_data( data ):
+def types_from_extension(filename):
+    if filename == '':
+        return (constants.BF_UNKNOWN, False)
+    # get extension
+    (root, ext) = os.path.splitext(filename)
+    if ext in constants.EXTENSIONS:
+        return (constants.EXTENSIONS[ext], True)
+    return (constants.BF_UNKNOWN, False)
+
+
+def types_from_signature(data):
+    """guesses a file's type based on signature """
+    # TODO
+
+
+def types_find(mime, afile=''):
+    """guess a file's type based on mime type and extension
+    """
+    (ftype, keep) = types_from_mime(mime)
+    if ftype != constants.BF_UNKNOWN:
+        return (ftype, keep)
+    # no type recognized: extension heuristics 
+    # TODO
+    return types_from_extension(afile)
+
+
+
+def types_data(data, afile=''):
+    """guess an in-memory file's type
+       optional file name (as found in archive or decompressed) 
+    """
     try:
         mime = magic.from_buffer(data, mime=True)
     except IOError:
         log_error('IOError', '_data')
         return ('other', False)
-    return types_filter(mime)
+    return types_find(mime, afile)
+    # if unknown, test signature manually
 
 
-def types_file( afile ):
+def types_file(afile):
+    """guess a file's type"""
     try:
         mime = magic.from_file(afile, mime=True)
     except IOError:
         log_error('IOError', afile)
         return ('other', False)
-    return types_filter(mime)
+    return types_find(mime, afile)
+    # if unknown, test signature manually
   

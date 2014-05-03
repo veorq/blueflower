@@ -25,13 +25,21 @@ import re
 import zipfile
 
 from blueflower.do import do_data
-from blueflower.settings import INFILENAME
+from blueflower.constants import BF_ZIP, ENCRYPTED, INFILENAME
 from blueflower.types import types_data
-from blueflower.utils import log_error, log_secret
+from blueflower.utils import log_encrypted, log_error, log_secret
 
 
 def zip_do_zip(azip, afile):
     """ azip:ZipFile, afile:source archive(s) name """
+    # test if encrypted
+    try:
+        azip.testzip()
+    except RuntimeError as e:
+        if 'encrypted' in str(e):
+            log_encrypted(BF_ZIP, afile)
+            return
+
     infilename = re.compile('|'.join(INFILENAME))
 
     # iterate directly over file names 
@@ -47,9 +55,12 @@ def zip_do_zip(azip, afile):
 
         # check file content, calling other modules
         data = azip.read(member)
-        (ftype, keep) = types_data(data)
+        (ftype, keep) = types_data(data, member)
         if keep:
-            do_data(ftype, data, afile+':'+member)
+            if ftype in ENCRYPTED:
+                log_encrypted(ftype, member)
+            else:
+                do_data(ftype, data, afile+':'+member)
 
 
 def zip_do_data(data, afile):

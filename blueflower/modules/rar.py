@@ -24,15 +24,20 @@ import re
 import rarfile
 
 from blueflower.do import do_data
-from blueflower.settings import INFILENAME
+from blueflower.constants import BF_RAR, ENCRYPTED, INFILENAME
 from blueflower.types import types_data
-from blueflower.utils import log_error, log_secret
+from blueflower.utils import log_encrypted, log_error, log_secret
 
 
 def rar_do_rar(arar, afile):
     """ arar:RarFile, afile:source archive(s) name """
-    infilename = re.compile('|'.join(INFILENAME))
+    # test if encrypted
+    if arar.needs_password():
+        log_encrypted(BF_RAR, afile)
+        return 
 
+    infilename = re.compile('|'.join(INFILENAME))
+    
     # iterate over infolist to detect directories
     # (unlike zipfile, doesnt append '/' to dir names
     for member in arar.infolist():
@@ -47,9 +52,12 @@ def rar_do_rar(arar, afile):
 
         # check file content, calling other modules
         data = arar.read(member)
-        (ftype, keep) = types_data(data)
+        (ftype, keep) = types_data(data, member)
         if keep:
-            do_data(ftype, data, afile+':'+member.filename)
+            if ftype in ENCRYPTED:
+                log_encrypted(ftype, member)
+            else:
+                do_data(ftype, data, afile+':'+member.filename)
 
 
 def rar_do_file(afile):

@@ -67,3 +67,34 @@ SKIP = (
 '.svn',
 )
 
+BF_BZIP2 = 'bzip2'
+BF_DOC = 'doc'
+BF_DOCX = 'docx'
+BF_GZ = 'gz'
+BF_PDF = 'pdf'
+BF_RAR = 'rar'
+BF_TAR = 'tar'
+BF_TEXT = 'text'
+BF_ZIP = 'zip'
+BF_PGP = 'pgp'
+BF_PGD = 'pgd'
+BF_GPG = 'gpg'
+BF_TRUECRYPT = 'truecrypt'
+
+BF_UNKNOWN = 'unknown'
+
+EXTENSIONS = {
+'.doc':BF_DOC,
+'.docx':BF_DOCX,
+'.gpg':BF_GPG,
+'.pgd':BF_PGD,
+'.pgp':BF_PGP,
+'.tc':BF_TRUECRYPT,
+}
+
+ENCRYPTED = (
+BF_GPG,
+BF_PGD,
+BF_PGP,
+BF_TRUECRYPT,
+)
