@@ -65,8 +65,27 @@ def select(directory):
 
 
 def process(selected):
+    nbselected = len(selected)
+    #  only show progress bar when sufficiently many files 
+    if nbselected < 128:
+        for afile, ftype in selected:
+            do_file(ftype, afile)
+        return
+
+    toolbar_width = 64
+    sys.stdout.write("[%s]" % (" " * toolbar_width))
+    sys.stdout.flush()
+    sys.stdout.write("\b" * (toolbar_width+1)) 
+    blocksize = len(selected)/toolbar_width
+    count = 0
     for afile, ftype in selected:
         do_file(ftype, afile)
+        count += 1
+        if count >= blocksize:
+            sys.stdout.write("=")
+            sys.stdout.flush()
+            count = 0
+    sys.stdout.write("\n")
 
 
 def usage():
@@ -74,6 +93,7 @@ def usage():
 
 
 def signal_handler(signal, frame):
+    sys.stdout.write("\n")
     log_comment('SIGINT received, quitting')
     sys.exit(1)
 
@@ -100,8 +120,10 @@ def main(args=sys.argv[1:]):
     log_comment('starting %s version %s' % (PROGRAM, __version__))
     log_comment('writing to %s' % logfile)
 
+    log_comment('selecting files...')
     selected = select(path)
     log_comment('%d files selected' % len(selected))
+    log_comment('processing files selected...')
     process(selected)
     log_comment('processing completed')
 

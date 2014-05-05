@@ -27,6 +27,7 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfparser import PDFSyntaxError
 from cStringIO import StringIO
 
 
@@ -38,9 +39,12 @@ def pdf_do_pdf(astream, afile):
     device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
     interpreter = PDFPageInterpreter(rsrcmgr, device)
     pagenos = set()
-    for page in PDFPage.get_pages(astream, pagenos, maxpages=0, password='', \
+    try:
+        for page in PDFPage.get_pages(astream, pagenos, maxpages=0, password='', \
                                   caching=True, check_extractable=True):
-        interpreter.process_page(page)
+            interpreter.process_page(page)
+    except PDFSyntaxError:
+        log_error('pdfparser.PDFSyntaxError', afile)
     device.close()
     text = retstr.getvalue()
     retstr.close()

@@ -19,6 +19,8 @@
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
+PROGRAM = 'blueflower'
+
 # regexes, case insensitive
 INFILE = (
 'begin certificate',
@@ -67,8 +69,6 @@ INFILENAME = (
 'users\.xml',       # .net
 'wallet\.dat',      # bitcoin
 )
-
-PROGRAM = 'blueflower'
 
 SKIP = (
 '.hg', 

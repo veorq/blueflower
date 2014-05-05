@@ -28,10 +28,8 @@ def log(message):
 
 
 def log_comment(comment):
-    message = '# %s: %s' % (timestamp(), comment)
+    message = '%s: %s' % (timestamp(), comment)
     print message
-    log(message)
-
 
 def log_encrypted(ftype, filename=''):
     log('ENCRYPTED, %s, %s' % (ftype, filename))
