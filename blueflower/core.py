@@ -22,15 +22,16 @@
 import logging
 import os
 import re
+import signal
 import sys
 import threading
 
+from __init__ import __version__
 from blueflower.do       import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
 from blueflower.types    import types_file
 from blueflower.utils    import log_comment, log_encrypted, log_secret, \
                                 log_selected, timestamp
-
 
 def select(directory):
     selected = []
@@ -72,17 +73,9 @@ def usage():
     print 'usage: %s directory' % PROGRAM
 
 
-class blueflowerThread(threading.Thread):
-    def __init__(self, path, index):
-        self.path = path
-        self.index = index
-        super(blueflowerThread, self).__init__()
-
-    def run(self):
-        selected = select(self.path)
-        log_comment('thread %d: %d files selected' % (self.index, len(selected)))
-        process(selected)
-        log_comment('thread %d: processing completed' % self.index)
+def signal_handler(signal, frame):
+    log_comment('SIGINT received, quitting')
+    sys.exit(1)
 
 
 def main(args=sys.argv[1:]):
@@ -90,35 +83,25 @@ def main(args=sys.argv[1:]):
         usage()
         return 1
 
-    for arg in args:
-        if not os.path.exists(arg):
-            print '%s does not exist' % arg
-            usage()
-            return 1
+    if not os.path.exists(args[0]):
+        print '%s does not exist' % arg
+        usage()
+        return 1
+    else:
+        path=args[0]
+
+    signal.signal(signal.SIGINT, signal_handler)
 
     logfile = '%s-%s' % (PROGRAM, timestamp())
-    print 'logging to %s' % logfile
     logging.basicConfig(filename=logfile, 
                         format='%(message)s',
                         level=logging.INFO)
 
-    log_comment('starting %s' % PROGRAM)
+    log_comment('starting %s version %s' % (PROGRAM, __version__))
+    log_comment('writing to %s' % logfile)
 
-    bfthreads = []
-    for i in xrange(len(args)):
-        arg = args[i]
-        log_comment('creating thread %d: %s' % (i, arg))
-        thread = blueflowerThread(arg, i)
-        bfthreads.append(thread)
+    selected = select(path)
+    log_comment('%d files selected' % len(selected))
+    process(selected)
+    log_comment('processing completed')
 
-    log_comment('%d threads created, now starting' % len(bfthreads))
-
-    for thread in bfthreads:
-        thread.start()
-        
-    for thread in bfthreads:
-        thread.join()
-
-
-if __name__ == '__main__':
-    main()

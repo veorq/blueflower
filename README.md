@@ -19,7 +19,6 @@ expected and it may destroy your computer. Use at your own risk.
 Features
 ------------
 
-* multithreading
 * detection of various key and password containers (SSH, Apple keychain,
   Java KeyStore, etc.) and other interesting files (Bitcoin wallets, PGP
   policies, etc.)
@@ -54,11 +53,11 @@ sudo make
 
 Execution:
 ```
-blueflower [directory1] [directory2] ...
+blueflower directory
 ```
-A new thread is created for each directory passed as argument.
 
-Results are written to a file `blueflower-YYYYMMDDhhmmss`.
+Results are written to a file `blueflower-YYYYMMDDhhmmss`. Hit `^C` to
+interrupt.
 
 The `makefile` defines `make clean`, `make cleanall`, and `make dist`.
 
