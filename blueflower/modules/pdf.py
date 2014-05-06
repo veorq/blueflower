@@ -23,31 +23,19 @@ import io
 from blueflower.modules.text import text_do_data
 from blueflower.utils import log_error
 
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from pdfminer.pdfpage import PDFPage
-from pdfminer.pdfparser import PDFSyntaxError
-from cStringIO import StringIO
+from pyPdf import PdfFileReader
+from pyPdf.utils import PyPdfError
 
 
 def pdf_do_pdf(astream, afile):
-    rsrcmgr = PDFResourceManager()
-    retstr = StringIO()
-    codec = 'utf-8'
-    laparams = LAParams()
-    device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
-    interpreter = PDFPageInterpreter(rsrcmgr, device)
-    pagenos = set()
+    text = '' 
     try:
-        for page in PDFPage.get_pages(astream, pagenos, maxpages=0, password='', \
-                                  caching=True, check_extractable=True):
-            interpreter.process_page(page)
-    except PDFSyntaxError:
-        log_error('pdfparser.PDFSyntaxError', afile)
-    device.close()
-    text = retstr.getvalue()
-    retstr.close()
+        pdf = PdfFileReader(astream)
+        for i in range(0, pdf.getNumPages()):
+            text += pdf.getPage(i).extractText() + "/n"
+    except PyPdfError:
+        log_error('PyPdfError', afile)
+        return
     text_do_data(text, afile)
 
 

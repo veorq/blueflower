@@ -45,7 +45,6 @@ def types_from_mime(mime):
     return (constants.BF_UNKNOWN, False)
 
 
-
 def types_from_extension(filename):
     """for types to be processed, or encrypted
        for other secret, extensions are in INFILENAME
@@ -58,20 +57,12 @@ def types_from_extension(filename):
     return (constants.BF_UNKNOWN, False)
 
 
-def types_from_signature(data):
-    """guesses a file's type based on signature """
-    # TODO
-
-
 def types_find(mime, afile=''):
     """guess a file's type based on mime type and extension"""
     (ftype, keep) = types_from_mime(mime)
     if ftype != constants.BF_UNKNOWN:
         return (ftype, keep)
-    # no type recognized: extension heuristics 
-    # TODO
     return types_from_extension(afile)
-
 
 
 def types_data(data, afile=''):

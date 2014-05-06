@@ -104,7 +104,7 @@ def main(args=sys.argv[1:]):
         return 1
 
     if not os.path.exists(args[0]):
-        print '%s does not exist' % arg
+        print '%s does not exist' % args[0]
         usage()
         return 1
     else:

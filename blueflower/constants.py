@@ -23,7 +23,7 @@ PROGRAM = 'blueflower'
 
 # regexes, case insensitive
 INFILE = (
-'begin certificate',
+'begin certificate', # certs and CSRs
 'pass phrase',
 'passphrase',
 'password',
@@ -43,15 +43,17 @@ INFILE = (
 INFILENAME = (
 '\.jks',            # java key store
 '\.kdb',            # keypass (matches .kdbx)
-'\.keychain',       # apple keychain
+'\.key',            # openssl .key, apple .keychain, etc.
 '\.kwallet',        # kwallet
 '\.psafe3',         # passwordsafe
+'cert8.db',         # mozilla
 'connect.inc',      # sql
 'default\.pass',    # dbman
 'htaccess',         # apache/nginx
 'id_dsa',           # openssh
 'id_ecdsa',         # openssh
 'id_rsa',           # openssh
+'key3.db',          # mozilla
 'localconf',        # typo3
 'localsettings',    # wikimedia
 'passlist',         # misc

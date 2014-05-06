@@ -71,7 +71,7 @@ Dependencies
 ------------
 
 Python modules:
-* [pdfminer](https://pypi.python.org/pypi/pdfminer/)
+* [pyPdf](https://pypi.python.org/pypi/pyPdf/)
 * [python-magic](https://pypi.python.org/pypi/python-magic/)
 * [rarfile](https://pypi.python.org/pypi/rarfile/)
 

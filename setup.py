@@ -25,7 +25,7 @@ from setuptools import setup
 import blueflower
 
 requirements = [
-    'pdfminer>=20140328',
+    'pyPdf>=1.13',
     'python-magic>=0.4.6',
     'rarfile>=2.6',
 ]
