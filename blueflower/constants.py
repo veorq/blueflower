@@ -21,7 +21,7 @@
 
 PROGRAM = 'blueflower'
 
-# regexes, case insensitive
+# regexes, case insensitive, add any regexes you need
 INFILE = (
 'begin certificate', # certs and CSRs
 'pass phrase',
@@ -95,7 +95,6 @@ BF_TRUECRYPT = 'truecrypt'
 BF_UNKNOWN = 'unknown'
 
 EXTENSIONS = {
-'.doc':BF_DOC,
 '.docx':BF_DOCX,
 '.gpg':BF_GPG,
 '.pgd':BF_PGD,

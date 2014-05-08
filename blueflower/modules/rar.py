@@ -51,8 +51,8 @@ def rar_do_rar(arar, afile):
             log_secret(res.group(), afile+':'+member.filename)
 
         # check file content, calling other modules
-        data = arar.read(member)
-        (ftype, keep) = types_data(data, member)
+        data = arar.read(member.filename)
+        (ftype, keep) = types_data(data, member.filename)
         if keep:
             if ftype in ENCRYPTED:
                 log_encrypted(ftype, member)

@@ -29,8 +29,6 @@ from blueflower.modules.text import text_do_data
 from blueflower.utils import log_error
 
 
-# thanks to http://etienned.github.io/posts/extract-text-from-word-docx-simply/
-
 def docx_do_docx(azip, afile):
     word_namespace = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
     par = word_namespace + 'p'

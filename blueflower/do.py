@@ -27,6 +27,9 @@ def do_data(ftype, data, afile):
     elif ftype == constants.BF_BZIP2: 
         from blueflower.modules.bzip2 import bzip2_do_data
         bzip2_do_data(data, afile)
+    elif ftype == constants.BF_DOCX: 
+        from blueflower.modules.docx import docx_do_data
+        docx_do_data(data, afile)
     elif ftype == constants.BF_GZ: 
         from blueflower.modules.gz import gz_do_data
         gz_do_data(data, afile)
@@ -53,6 +56,9 @@ def do_file(ftype, afile):
     elif ftype == constants.BF_GZ: 
         from blueflower.modules.gz import gz_do_file
         gz_do_file(afile)
+    elif ftype == constants.BF_DOCX: 
+        from blueflower.modules.docx import docx_do_file
+        docx_do_file(afile)
     elif ftype == constants.BF_RAR: 
         from blueflower.modules.rar import rar_do_file
         rar_do_file(afile)

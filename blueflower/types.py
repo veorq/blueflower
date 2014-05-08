@@ -48,6 +48,8 @@ def types_from_mime(mime):
 def types_from_extension(filename):
     """for types to be processed, or encrypted
        for other secret, extensions are in INFILENAME
+       some types misrecognized (some .docx as zip, etc.),
+       thus done before types_from_mime
     """
     if filename == '':
         return (constants.BF_UNKNOWN, False)
@@ -59,10 +61,10 @@ def types_from_extension(filename):
 
 def types_find(mime, afile=''):
     """guess a file's type based on mime type and extension"""
-    (ftype, keep) = types_from_mime(mime)
+    (ftype, keep) = types_from_extension(afile)
     if ftype != constants.BF_UNKNOWN:
         return (ftype, keep)
-    return types_from_extension(afile)
+    return types_from_mime(mime)
 
 
 def types_data(data, afile=''):
