@@ -42,6 +42,9 @@ def do_data(ftype, data, afile):
     elif ftype == constants.BF_TEXT: 
         from blueflower.modules.text import text_do_data
         text_do_data(data, afile)
+    elif ftype == constants.BF_XLSX: 
+        from blueflower.modules.xlsx import xlsx_do_data
+        xlsx_do_data(data, afile)
     elif ftype == constants.BF_ZIP: 
         from blueflower.modules.zip import zip_do_data
         zip_do_data(data, afile)
@@ -71,6 +74,9 @@ def do_file(ftype, afile):
     elif ftype == constants.BF_TEXT: 
         from blueflower.modules.text import text_do_file
         text_do_file(afile)
+    elif ftype == constants.BF_XLSX: 
+        from blueflower.modules.xlsx import xlsx_do_file
+        xlsx_do_file(afile)
     elif ftype == constants.BF_ZIP: 
         from blueflower.modules.zip import zip_do_file
         zip_do_file(afile)

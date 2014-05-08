@@ -79,7 +79,6 @@ SKIP = (
 )
 
 BF_BZIP2 = 'bzip2'
-BF_DOC = 'doc'
 BF_DOCX = 'docx'
 BF_GZ = 'gz'
 BF_PDF = 'pdf'
@@ -91,6 +90,7 @@ BF_PGP = 'pgp'
 BF_PGD = 'pgd'
 BF_GPG = 'gpg'
 BF_TRUECRYPT = 'truecrypt'
+BF_XLSX = 'xlsx'
 
 BF_UNKNOWN = 'unknown'
 
@@ -100,6 +100,7 @@ EXTENSIONS = {
 '.pgd':BF_PGD,
 '.pgp':BF_PGP,
 '.tc':BF_TRUECRYPT,
+'.xlsx':BF_XLSX,
 }
 
 ENCRYPTED = (

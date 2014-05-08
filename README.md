@@ -1,4 +1,4 @@
-blueflower
+0.9.3blueflower
 ==========
 
 ![logo](blueflower.jpg)
@@ -29,6 +29,7 @@ Features
     - compressed files bzip2, gzip
     - encrypted containers/archives: PGP/GPG, Truecrypt, RAR, ZIP
     - PDF documents
+    - DOCX, XLSX documents
 * support of nested archives and compressed files (except for nested RARs)
 * portable \*nix/Windows
 * CSV output
@@ -71,10 +72,10 @@ Dependencies
 ------------
 
 Python modules:
-* [openpyxl](https://pypi.python.org/pypi/openpyxl/)
 * [pyPdf](https://pypi.python.org/pypi/pyPdf/)
 * [python-magic](https://pypi.python.org/pypi/python-magic/)
 * [rarfile](https://pypi.python.org/pypi/rarfile/)
+* [xlrd](https://pypi.python.org/pypi/xlrd/)
 
 Other:
 * `unrar` utility

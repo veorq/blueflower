@@ -25,7 +25,7 @@ from setuptools import setup
 import blueflower
 
 requirements = [
-    'openpyxl>=1.8.6',
+    'xlrd>=0.9.3',
     'pyPdf>=1.13',
     'python-magic>=0.4.6',
     'rarfile>=2.6',
