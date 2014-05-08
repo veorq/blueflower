@@ -21,5 +21,5 @@
 
 
 __author__ = 'Jean-Philippe Aumasson'
-__version__ = '20140505'
+__version__ = '20140508'
 __licence__ = 'GPLv3'

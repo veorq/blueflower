@@ -1,4 +1,4 @@
-0.9.3blueflower
+blueflower
 ==========
 
 ![logo](blueflower.jpg)
