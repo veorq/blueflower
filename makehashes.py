@@ -72,9 +72,6 @@ def main():
     # prompt for password, derive key
     pwd = getpass.getpass('password: ')
     (key, verifier, salt) = key_derivation(pwd)  
-    print 'key      %s' % key
-    print 'verifier %s' % verifier
-    print 'salt     %s' % salt
 
     # create output file at the place as input
     hashesfile = path + '.hashes'
@@ -91,7 +88,6 @@ def main():
     with  open(path) as fin:
         for line in fin:
             linestring = line.rstrip('\n').strip()
-            print linestring
             towrite = '%s\n' % hash_string(linestring, key)
             fout.write(towrite)
 
