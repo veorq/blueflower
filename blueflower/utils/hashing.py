@@ -69,10 +69,14 @@ def key_derivation(pwd, salt=''):
         salt = b2a_hex(os.urandom(8))
 
     salt_as_int = int(salt, 16)
-    key = siphash_key(pwd, salt_as_int)
+
+    key = (siphash_key(pwd+'0', salt_as_int)<<64) | \
+           siphash_key(pwd+'1', salt_as_int)
+
     verifier = tohex(siphash_verifier(salt, key))
     return (key, verifier, salt)
 
 
 def hash_string(astring, key):
+
     return tohex(SIPHASH(astring, key))
