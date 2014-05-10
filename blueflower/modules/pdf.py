@@ -24,7 +24,6 @@ from blueflower.modules.text import text_do_data
 from blueflower.utils.log import log_error
 
 from pyPdf import PdfFileReader
-from pyPdf.utils import PyPdfError
 
 
 def pdf_do_pdf(astream, afile):

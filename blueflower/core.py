@@ -33,7 +33,7 @@ from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
 from blueflower.types import types_file
 from blueflower.utils.log import log_comment, log_encrypted, log_secret, \
                                  log_selected, timestamp
-from blueflower.utils.hashing import key_derivation, HASH_BYTES, tohex
+from blueflower.utils.hashing import key_derivation, HASH_BYTES
 
 
 # frozenset of hashes to detect (faster membership testing than tuple or list)
@@ -85,7 +85,7 @@ def get_hashes(hashesfile):
             fail = True
             # check that it's an hex value
         try:
-            anint = int(ahash, 16)
+            int(ahash, 16)
         except ValueError:
             log_comment('invalid hash value (should be hex string): %s' \
                         % ahash)
