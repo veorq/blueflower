@@ -74,7 +74,7 @@ Obviously this comes with a performance penalty: hashing all strings
 matching the regular expression given.
  
 
-## Creation 
+### Creation 
 
 First, put your secret strings in a text file with one item per line,
 for example
@@ -98,7 +98,7 @@ This will create a file `yourfile.hashes` in the same directory as
 `yourfile`, to give as a second argument to blueflower.
 
 
-## Format
+### Format
 
 The first line of `.hashes` files contains the regular expression.
 
@@ -126,9 +126,9 @@ For example, the first 5 lines of a `.hashes` file can be
 381cd35a5d203fea
 ```
 
-## Security 
+### Security 
 
-### Key derivation
+#### Key derivation
 
 A key is derived from the password using SipHash-1000-100000 (the
 [SipHash](https://131002.net/siphash) PRF with 1000 compression rounds
@@ -147,7 +147,7 @@ The hashing speed is mostly independent of the password's length, since
 the 100000-iteration bottleneck is the finalization.
 
 
-### Verifier and salt
+#### Verifier and salt
 
 The presence of the verifier string allows to efficiently test the
 correctness of a key, and thus to bruteforce keys at a high rate by
@@ -161,14 +161,14 @@ hash functions are used, and the unpredictability property is not
 affected.
 
 
-### Regular expression 
+#### Regular expression 
 
 The choice of the regular expression leaks information on the secrets
 strings searched for, so choose it carefully: the more general, the less
 leak, but the slower too (more strings will be hashed).
 
 
-### Results
+#### Log file
 
 The log file only contains the hash corresponding to the secret string
 detected, not the string matched. 
