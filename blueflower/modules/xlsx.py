@@ -27,10 +27,14 @@ from blueflower.utils.log import log_error
 
 def xlsx_do_xlsx(axl, afile):
     rows = []
-    for i in xrange(axl.nsheets):
-        sheet = axl.sheet_by_index(i)
-        for j in xrange(sheet.nrows):
-            rows.append(' '.join(sheet.row_values(j)))
+    try:
+        for i in xrange(axl.nsheets):
+            sheet = axl.sheet_by_index(i)
+            for j in xrange(sheet.nrows):
+                rows.append(' '.join(sheet.row_values(j)))
+    except TypeError:
+        log_error('TypeError', afile)
+        return
  
     text = '\n\n'.join(rows)
     text_do_data(text, afile)
