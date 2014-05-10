@@ -35,6 +35,7 @@ from blueflower.utils.log import log_comment, log_encrypted, log_secret, \
                                  log_selected, timestamp
 from blueflower.utils.hashing import key_derivation, HASH_BYTES, tohex
 
+
 # frozenset of hashes to detect (faster membership testing than tuple or list)
 HASHES = frozenset()
 HASH_KEY = 0 
@@ -167,14 +168,20 @@ def process(selected):
     log_comment('processing completed')
 
 
-def usage():
-    """prints usage"""
-    print 'usage: %s directory [hashes]' % PROGRAM
+def counts(logfile):
+    logs = open(logfile).read()
+    secrets = logs.count('SECRET,')
+    log_comment('%d files or strings flagged as "secret"' % secrets)
 
 
 def bye():
     print 'thank you for using %s, please report bugs' % PROGRAM
     sys.exit(1)
+
+
+def usage():
+    """prints usage"""
+    print 'usage: %s directory [hashes]' % PROGRAM
 
 
 def signal_handler(*_):
@@ -218,5 +225,6 @@ def main(args=sys.argv[1:]):
         get_hashes(hashesfile) 
     selected = select(path)
     process(selected)
+    counts(logfile)
     bye()
 
