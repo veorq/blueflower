@@ -19,23 +19,96 @@
 # Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
+import getpass
 import logging
 import os
 import re
 import signal
 import sys
-import threading
 
-from __init__ import __version__
-from blueflower.do       import do_file
+
+from blueflower import __version__
+from blueflower.do import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
-from blueflower.types    import types_file
-from blueflower.utils    import log_comment, log_encrypted, log_secret, \
-                                log_selected, timestamp
+from blueflower.types import types_file
+from blueflower.utils.log import log_comment, log_encrypted, log_secret, \
+                                 log_selected, timestamp
+from blueflower.utils.hashing import key_derivation, HASH_BYTES
+
+# frozenset of hashes to detect (faster membership testing than tuple or list)
+HASHES = frozenset()
+HASH_KEY = 0 
+HASH_REGEX = '' # TODO: save compiled regex
+
+
+def get_hashes(hashesfile):
+    """gets and checks password, create hashes list"""
+    global HASHES
+    global HASH_KEY
+    global HASH_REGEX
+    log_comment('verifying hashes file %s...' % hashesfile)
+    pwd = getpass.getpass('password: ')
+    fin = open(hashesfile)     
+    regex = fin.readline().rstrip('\n')
+    try:
+        (salt, verifier) = fin.readline().rstrip('\n').split(',')
+    except ValueError:
+        log_comment('failed to extract verifier and salt')    
+        bye()
+    (key, averifier, salt) = key_derivation(pwd, salt)  
+
+    # failure is an option
+    fail = False
+
+    if verifier != averifier:
+        log_comment('verifier does not match (incorrect password?)')
+        fail = True
+    else:
+        HASH_KEY = key
+        HASH_REGEX = regex
+
+    try:
+        re.compile(regex)
+    except re.error:
+        log_comment('invalid regex')
+        fail = True
+
+    # file pointer is at the 3rd line:
+    hashes = []
+    for line in fin: 
+        ahash = line.strip()    
+        # hex string length = 2*HASH_BYTES
+        if len(ahash) != 2*HASH_BYTES:
+            log_comment('invalid hash length (%d bytes): %s' % \
+                        (len(ahash), ahash))
+            fail = True
+            # check that it's an hex value
+        try:
+            anint = int(ahash, 16)
+        except ValueError:
+            log_comment('invalid hash value (should be hex string): %s' \
+                        % ahash)
+            fail = True
+        # only record hashes if we expect to use them
+        if not fail:
+            hashes.append(ahash)
+    
+    # no more fail opportunities
+    if fail:
+        log_comment('hashes file failed to verify, aborting...')
+        bye()
+
+    # record hashes and key, notifies of duplicates
+    HASHES = frozenset(hashes)    
+    log_comment('%d hashes read, %d uniques' % (len(hashes), len(HASHES)))
+    log_comment('using regex %s' % HASH_REGEX)
+    log_comment('hashes file successfully verified')
+
 
 def select(directory):
+    """selects files to process, checks file names"""
+    log_comment('selecting files...')
     selected = []
-
     infilename = re.compile('|'.join(INFILENAME))
 
     for root, dirs, files in os.walk(directory):
@@ -61,54 +134,75 @@ def select(directory):
                     selected.append((fabs, ftype))
                     log_selected(ftype, fabs)
 
+    log_comment('%d files selected' % len(selected))
     return selected
 
 
 def process(selected):
+    """checks content of selected files"""
+    log_comment('processing files selected...')
     nbselected = len(selected)
-    #  only show progress bar when sufficiently many files 
-    if nbselected < 128:
+    min_files_for_toolbar = 128
+
+    if nbselected < min_files_for_toolbar:
         for afile, ftype in selected:
             do_file(ftype, afile)
-        return
+    else:
+        toolbar_width = 64
+        sys.stdout.write("[%s]" % (" " * toolbar_width))
+        sys.stdout.flush()
+        sys.stdout.write("\b" * (toolbar_width+1)) 
+        blocksize = len(selected)/toolbar_width
+        count = 0
 
-    toolbar_width = 64
-    sys.stdout.write("[%s]" % (" " * toolbar_width))
-    sys.stdout.flush()
-    sys.stdout.write("\b" * (toolbar_width+1)) 
-    blocksize = len(selected)/toolbar_width
-    count = 0
-    for afile, ftype in selected:
-        do_file(ftype, afile)
-        count += 1
-        if count >= blocksize:
-            sys.stdout.write("=")
-            sys.stdout.flush()
-            count = 0
-    sys.stdout.write("\n")
+        for afile, ftype in selected:
+            do_file(ftype, afile)
+            count += 1
+            if count >= blocksize:
+                sys.stdout.write("=")
+                sys.stdout.flush()
+                count = 0
+        sys.stdout.write("\n")
+
+    log_comment('processing completed')
 
 
 def usage():
-    print 'usage: %s directory' % PROGRAM
+    """prints usage"""
+    print 'usage: %s directory [hashes]' % PROGRAM
 
 
-def signal_handler(signal, frame):
-    sys.stdout.write("\n")
-    log_comment('SIGINT received, quitting')
+def bye():
+    print 'thank you for using %s, please report bugs' % PROGRAM
     sys.exit(1)
 
 
+def signal_handler(*_):
+    """interrupt upon ^C"""
+    sys.stdout.write("\n")
+    log_comment('SIGINT received, quitting')
+    bye()
+
+
 def main(args=sys.argv[1:]):
+    """main function"""
     if (len(args) < 1):
         usage()
         return 1
 
-    if not os.path.exists(args[0]):
-        print '%s does not exist' % args[0]
+    path = args[0]
+    if not os.path.exists(path):
+        print '%s does not exist' % path
         usage()
         return 1
-    else:
-        path=args[0]
+
+    hashesfile = ''
+    if len(args)>1:
+        hashesfile = args[1]
+        if not os.path.exists(hashesfile):
+            print '%s does not exist' % hashesfile
+            usage()
+            return 1
 
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -120,10 +214,9 @@ def main(args=sys.argv[1:]):
     log_comment('starting %s version %s' % (PROGRAM, __version__))
     log_comment('writing to %s' % logfile)
 
-    log_comment('selecting files...')
+    if hashesfile:
+        get_hashes(hashesfile) 
     selected = select(path)
-    log_comment('%d files selected' % len(selected))
-    log_comment('processing files selected...')
     process(selected)
-    log_comment('processing completed')
+    bye()
 

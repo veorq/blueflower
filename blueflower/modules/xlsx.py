@@ -22,7 +22,7 @@
 from xlrd import open_workbook, XLRDError
 
 from blueflower.modules.text import text_do_data
-from blueflower.utils import log_error
+from blueflower.utils.log import log_error
 
 
 def xlsx_do_xlsx(axl, afile):
@@ -48,7 +48,7 @@ def xlsx_do_data(data, afile):
 def xlsx_do_file(afile):
     try:
         axl = open_workbook(afile)
-    except Exception as e:
-        log_error('%s' % str(e), afile)
+    except XLRDError:
+        log_error('XLRDError', afile)
         return
     xlsx_do_xlsx(axl, afile)

@@ -27,7 +27,7 @@ import zipfile
 from blueflower.do import do_data
 from blueflower.constants import BF_ZIP, ENCRYPTED, INFILENAME
 from blueflower.types import types_data
-from blueflower.utils import log_encrypted, log_error, log_secret
+from blueflower.utils.log import log_encrypted, log_error, log_secret
 
 
 def zip_do_zip(azip, afile):

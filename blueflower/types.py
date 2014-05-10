@@ -22,12 +22,18 @@
 import os
 import magic
 
-from blueflower.utils import log_error
+from blueflower.utils.log import log_error
 import blueflower.constants as constants
 
 
 def types_from_mime(mime):
-    (mimetype, mimesubtype) = mime.split('/')
+    """identifies supported types from mime type"""
+    try: 
+        (mimetype, mimesubtype) = mime.split('/')
+    except ValueError:
+        log_error('ValueError', mime)
+        return (constants.BF_UNKNOWN, False)
+
     if mimesubtype == 'x-bzip2':
         return (constants.BF_BZIP2, True)
     elif mimetype == 'text':
@@ -46,10 +52,10 @@ def types_from_mime(mime):
 
 
 def types_from_extension(filename):
-    """for types to be processed, or encrypted
-       for other secret, extensions are in INFILENAME
-       some types misrecognized (some .docx as zip, etc.),
-       thus done before types_from_mime
+    """identifies supported types from file extension (for types to be
+       processed, or encrypted containers);
+       some types being misrecognized (some .docx as zip, etc.), it is
+       called before types_from_mime
     """
     if filename == '':
         return (constants.BF_UNKNOWN, False)
@@ -76,8 +82,10 @@ def types_data(data, afile=''):
     except IOError:
         log_error('IOError', '_data')
         return ('other', False)
+    except ValueError:
+        log_error('ValueError', afile)
+        return ('other', False)
     return types_find(mime, afile)
-    # if unknown, test signature manually
 
 
 def types_file(afile):
@@ -87,6 +95,8 @@ def types_file(afile):
     except IOError:
         log_error('IOError', afile)
         return ('other', False)
+    except ValueError:
+        log_error('ValueError', afile)
+        return ('other', False)
     return types_find(mime, afile)
-    # if unknown, test signature manually
   

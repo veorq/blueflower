@@ -22,19 +22,25 @@
 import re
 
 from blueflower.constants import INFILE
-from blueflower.utils import log_secret, log_error
+from blueflower.core import HASHES, HASH_KEY, HASH_REGEX
+from blueflower.utils.hashing import hash_string
+from blueflower.utils.log import log_secret, log_error
+
+def search_hashes(text, afile):
+    for match in re.finditer(HASH_REGEX, text):
+        # hash
+        ahash = hash_string(match.group(0), HASH_KEY)
+        if ahash in HASHES:
+            log_secret('hash %s' % ahash, afile)
 
 
 def text_do_data(data, afile):
     text = data.lower()
     regex = '|'.join(INFILE)
-    #infile = re.compile('|'.join(INFILE)) 
     for match in re.finditer(regex, text):
         log_secret(match.group(), afile)
-
-    #res = infile.search(buf)
-    #if res:
-    #    log_secret(res.group(), afile)
+    if HASHES:
+        search_hashes(text, afile)
 
 
 def text_do_file(afile):

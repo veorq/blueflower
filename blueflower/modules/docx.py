@@ -26,7 +26,7 @@ from xml.etree.cElementTree import XML
 from xml.etree.ElementTree import XML
 
 from blueflower.modules.text import text_do_data
-from blueflower.utils import log_error
+from blueflower.utils.log import log_error
 
 
 def docx_do_docx(azip, afile):

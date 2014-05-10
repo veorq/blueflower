@@ -21,7 +21,7 @@
 import io
 
 from blueflower.modules.text import text_do_data
-from blueflower.utils import log_error
+from blueflower.utils.log import log_error
 
 from pyPdf import PdfFileReader
 from pyPdf.utils import PyPdfError

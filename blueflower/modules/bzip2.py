@@ -25,7 +25,8 @@ import bz2
 
 from blueflower.do import do_data
 from blueflower.types import types_data
-from blueflower.utils import log_error
+from blueflower.utils.log import log_error
+
 
 # except when reading the file
 def bzip2_do_bzip2(abzip2, afile):

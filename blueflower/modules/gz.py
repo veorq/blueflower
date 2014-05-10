@@ -25,7 +25,7 @@ import gzip
 
 from blueflower.do import do_data
 from blueflower.types import types_data
-from blueflower.utils import log_error
+from blueflower.utils.log import log_error
 
 # except when reading the file
 def gz_do_gz(agz, afile):

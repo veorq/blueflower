@@ -40,7 +40,7 @@ setup(
     author=blueflower.__author__,
     author_email='jeanphilippe.aumasson@gmail.com',
     license=blueflower.__licence__,
-    packages=['blueflower', 'blueflower.modules'],
+    packages=['blueflower', 'blueflower.modules', 'blueflower.utils'],
     entry_points={
         'console_scripts': [
             'blueflower = blueflower.__main__:main',

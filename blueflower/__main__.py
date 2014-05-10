@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# __init__.py
+# __main__.py
 #
 # This file is part of blueflower.
 # 

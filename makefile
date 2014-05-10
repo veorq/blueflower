@@ -5,7 +5,9 @@ install:
 	    python setup.py install
 
 clean:  
-	    $(RM) $(PROGRAM)-* $(PROGRAM)/*.pyc $(PROGRAM)/modules/*.pyc
+	    $(RM) $(PROGRAM)-* $(PROGRAM)/*.pyc \
+                               $(PROGRAM)/modules/*.pyc \
+			       $(PROGRAM)/utils/*.pyc
 
 cleanall:   clean
 	    $(RM) build/ dist/ $(PROGRAM).egg-info/ 
