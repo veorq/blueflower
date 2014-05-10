@@ -56,9 +56,10 @@ More details below.
 
 The `makefile` defines `make clean`, `make cleanall`, and `make dist`.
 
-*WARNINGS:*
+**WARNINGS:**
 
 * no limit is set on the number of files processed (`^C` to gracefully interrupt)
+* RAR archives nested in other archives are not supported 
 * there may be a lot of false positives
 
 
