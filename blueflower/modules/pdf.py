@@ -33,8 +33,8 @@ def pdf_do_pdf(astream, afile):
         pdf = PdfFileReader(astream)
         for i in range(0, pdf.getNumPages()):
             text += pdf.getPage(i).extractText() + "/n"
-    except PyPdfError:
-        log_error('PyPdfError', afile)
+    except Exception: # pyPdf raises Exception..
+        log_error('Exception in pyPdf', afile)
         return
     text_do_data(text, afile)
 
