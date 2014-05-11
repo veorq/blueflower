@@ -1,4 +1,4 @@
-# zip.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 import io
@@ -35,20 +32,22 @@ def zip_do_zip(azip, afile):
     # test if encrypted
     try:
         azip.testzip()
-    except RuntimeError as exception:
-        if 'encrypted' in str(exception):
+    except RuntimeError as e:
+        if 'encrypted' in str(e):
             log_encrypted(BF_ZIP, afile)
             return
+        else:
+            log(str(e), afile)
 
     infilename = re.compile('|'.join(INFILENAME))
 
-    # iterate directly over file names 
+    # iterate directly over file names
     for member in azip.namelist():
         # sort directories out
         if member.endswith('/'):
             continue
         # check file name
-        filename =  os.path.basename(member).lower()
+        filename = os.path.basename(member).lower()
         res = infilename.search(filename)
         if res:
             log_secret(res.group(), afile+':'+member)
@@ -67,8 +66,8 @@ def zip_do_data(data, afile):
     filelike = io.BytesIO(data)
     try:
         azip = zipfile.ZipFile(filelike)
-    except zipfile.BadZipfile:
-        log_error('zipfile.BadZipFile', afile)
+    except zipfile.BadZipfile as e:
+        log_error(str(e), afile)
         return
     zip_do_zip(azip, afile)
     azip.close()
@@ -77,9 +76,8 @@ def zip_do_data(data, afile):
 def zip_do_file(afile):
     try:
         azip = zipfile.ZipFile(afile)
-    except zipfile.BadZipfile:
-        log_error('zipfile.BadZipFile', afile)
+    except zipfile.BadZipfile as e:
+        log_error(str(e), afile)
         return
     zip_do_zip(azip, afile)
     azip.close()
-

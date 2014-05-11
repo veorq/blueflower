@@ -1,4 +1,4 @@
-# docx.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 import io
@@ -30,17 +27,16 @@ from blueflower.utils.log import log_error
 
 
 def docx_do_docx(azip, afile):
-    word_namespace = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
-    par = word_namespace + 'p'
-    txt = word_namespace + 't'
+    namespace = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+    par = namespace + 'p'
+    txt = namespace + 't'
  
     xml_content = azip.read('word/document.xml')
     tree = XML(xml_content)
  
     paragraphs = []
     for paragraph in tree.getiterator(par):
-        texts = [node.text
-                 for node in paragraph.getiterator(txt)
+        texts = [node.text for node in paragraph.getiterator(txt)
                  if node.text]
         if texts:
             paragraphs.append(''.join(texts))
@@ -53,8 +49,8 @@ def docx_do_data(data, afile):
     filelike = io.BytesIO(data)
     try:
         azip = zipfile.ZipFile(filelike)
-    except zipfile.BadZipfile:
-        log_error('zipfile.BadZipFile', afile)
+    except zipfile.BadZipfile as e:
+        log_error(str(e), afile)
         return
     docx_do_docx(azip, afile)
     azip.close()
@@ -63,8 +59,8 @@ def docx_do_data(data, afile):
 def docx_do_file(afile):
     try:
         azip = zipfile.ZipFile(afile)
-    except zipfile.BadZipfile:
-        log_error('zipfile.BadZipFile', afile)
+    except zipfile.BadZipfile as e:
+        log_error(str(e), afile)
         return
     docx_do_docx(azip, afile)
     azip.close()

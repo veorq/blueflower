@@ -1,5 +1,4 @@
-#
-# hashing.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -15,23 +14,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
-# hashes file format:
-#
-# 1st line: regex (checked to be valid)
-# 2nd line: verifier, salt0
-# 3rd line: siphash-2-2(salt1+value1, key), salt1
-# 4th line: siphash-2-2(salt2+value2, key), salt2
-# etc.
-#
-# where 
-#       (key, verifier, salt) = key_derivation(pwd)
-#       '+' denotes strings concatenation
-#       hashes are represented as 8-byte hex strings
-#       salts are represented as 8-byte hex strings       
 
 import os
 
@@ -41,7 +24,8 @@ from blueflower.utils.siphash import SipHash
 
 HASH_BYTES = 8
 SALT_BYTES = 8
-SIPHASH = SipHash(2, 2)
+SIPHASH_FAST = SipHash(2, 2)
+SIPHASH_SLOW = SipHash(1000, 100000)
 
 
 def tohex(anint):
@@ -54,29 +38,23 @@ def key_derivation(pwd, salt=''):
         * key is a 128-bit int (as siphash.SipHash requires)
         * verifier is an 8-byte string
         * salt is an 8-byte string
-    the same salt is used for key and verifier generation
     """
-    c_key = 1000
-    d_key = 100000
-    siphash_key = SipHash(c_key, d_key)
-
-    c_verifier = 2
-    d_verifier = 2
-    siphash_verifier = SipHash(c_verifier, d_verifier)
-
     # if salt not given, pick a random one
     if not salt:
-        salt = b2a_hex(os.urandom(8))
+        salt = b2a_hex(os.urandom(SALT_BYTES))
 
+    # key generation
     salt_as_int = int(salt, 16)
+    mask = 0xffffffffffffffff
+    key_hi = SIPHASH_SLOW(pwd+'0', salt_as_int) & mask
+    key_lo = SIPHASH_SLOW(pwd+'1', salt_as_int) & mask
+    key = (key_hi << 64) | key_lo
 
-    key = (siphash_key(pwd+'0', salt_as_int)<<64) | \
-           siphash_key(pwd+'1', salt_as_int)
+    # verifier generation
+    verifier = tohex(SIPHASH_FAST(salt, key))
 
-    verifier = tohex(siphash_verifier(salt, key))
     return (key, verifier, salt)
 
 
 def hash_string(astring, key):
-
-    return tohex(SIPHASH(astring, key))
+    return tohex(SIPHASH_FAST(astring, key))

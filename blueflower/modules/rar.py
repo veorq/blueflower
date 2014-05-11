@@ -1,4 +1,4 @@
-# rar.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 import os
@@ -30,22 +27,23 @@ from blueflower.utils.log import log_encrypted, log_error, log_secret
 
 
 def rar_do_rar(arar, afile):
-    """ arar:RarFile, afile:source archive(s) name """
+    """ arar: RarFile, afile: source archive(s) name """
     # test if encrypted
     if arar.needs_password():
         log_encrypted(BF_RAR, afile)
-        return 
+        return
 
     infilename = re.compile('|'.join(INFILENAME))
-    
+
     # iterate over infolist to detect directories
     # (unlike zipfile, doesnt append '/' to dir names
     for member in arar.infolist():
-        # sort directories out
+        # leave directories out
         if member.isdir():
             continue
+
         # check file name
-        filename =  os.path.basename(member.filename).lower()
+        filename = os.path.basename(member.filename).lower()
         res = infilename.search(filename)
         if res:
             log_secret(res.group(), afile+':'+member.filename)
@@ -65,9 +63,8 @@ def rar_do_file(afile):
     rarfile.PATH_SEP = '/'
     try:
         arar = rarfile.RarFile(afile)
-    except rarfile.BadRarFile:
-        log_error('rarfile.BadRarFile', afile)
+    except rarfile.BadRarFile as e:
+        log_error(str(e), afile)
         return
     rar_do_rar(arar, afile)
     arar.close()
-

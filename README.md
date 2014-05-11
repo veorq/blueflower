@@ -198,6 +198,10 @@ Other:
 Intellectual property
 ---------------------
 
-blueflower is released under GPLv3. Copyright Jean-Philippe Aumasson 2014.
+blueflower is released under GPLv3, and is copyright (c) 2014 Jean-Philippe Aumasson.
 
-The `siphash.py` module, under MIT license, is copyright Philipp Jovanovic 2013.
+The `siphash.py` module, under MIT license, is copyright (c) 2013
+Philipp Jovanovic.
+
+The drawing in the image `blueflower.jpg` is copyright (c) 2014 Melina
+Aumasson.

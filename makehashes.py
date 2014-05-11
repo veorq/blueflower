@@ -39,9 +39,10 @@ import os
 import re
 import sys
 
-from binascii import b2a_hex
-
 from blueflower.utils.hashing import hash_string, key_derivation
+
+
+EXTENSION = '.hashes'
 
 
 def usage():
@@ -74,7 +75,7 @@ def main():
     (key, verifier, salt) = key_derivation(pwd)  
 
     # create output file at the place as input
-    hashesfile = path + '.hashes'
+    hashesfile = path + EXTENSION
     try:
         fout = open(hashesfile, 'w')
     except IOError:
@@ -85,15 +86,13 @@ def main():
     fout.write(towrite)
 
     # speed not critical, so write line per line
-    with  open(path) as fin:
+    with open(path) as fin:
         for line in fin:
             linestring = line.rstrip('\n').strip()
             towrite = '%s\n' % hash_string(linestring, key)
             fout.write(towrite)
-
     fout.close()
 
 
 if __name__ == '__main__':
     sys.exit(main())
-

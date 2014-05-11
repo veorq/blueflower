@@ -1,4 +1,4 @@
-# xlsx.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 from xlrd import open_workbook, XLRDError
@@ -32,10 +29,10 @@ def xlsx_do_xlsx(axl, afile):
             sheet = axl.sheet_by_index(i)
             for j in xrange(sheet.nrows):
                 rows.append(' '.join(sheet.row_values(j)))
-    except TypeError:
-        log_error('TypeError', afile)
+    except TypeError as e:
+        log_error(str(e), afile)
         return
- 
+
     text = '\n\n'.join(rows)
     text_do_data(text, afile)
 
@@ -43,8 +40,8 @@ def xlsx_do_xlsx(axl, afile):
 def xlsx_do_data(data, afile):
     try:
         axl = open_workbook(file_contents=data)
-    except XLRDError:
-        log_error('XLRDError', afile)
+    except XLRDError as e:
+        log_error(str(e), afile)
         return
     xlsx_do_xlsx(axl, afile)
 
@@ -52,7 +49,7 @@ def xlsx_do_data(data, afile):
 def xlsx_do_file(afile):
     try:
         axl = open_workbook(afile)
-    except XLRDError:
-        log_error('XLRDError', afile)
+    except XLRDError as e:
+        log_error(str(e), afile)
         return
     xlsx_do_xlsx(axl, afile)

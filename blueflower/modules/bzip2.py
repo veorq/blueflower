@@ -1,4 +1,4 @@
-# bzip2.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 import io
@@ -28,13 +25,12 @@ from blueflower.types import types_data
 from blueflower.utils.log import log_error
 
 
-# except when reading the file
 def bzip2_do_bzip2(abzip2, afile):
-    """abzip2:raw bytes, afile:source file name"""
+    """abzip2: raw bytes, afile: source file name"""
     try:
         data = bz2.decompress(abzip2)
-    except IOError:
-        log_error('IOError', afile)
+    except IOError as e:
+        log_error(str(e), afile)
         return
     (ftype, keep) = types_data(data)
     if keep:
@@ -54,8 +50,8 @@ def bzip2_do_file(afile):
     try:
         fid = open(afile)
         abzip2 = fid.read()
-    except IOError:
-        log_error('IOError', afile)
+    except IOError as e:
+        log_error(str(e), afile)
         return
     bzip2_do_bzip2(abzip2, afile)
     fid.close()

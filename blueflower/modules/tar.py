@@ -1,4 +1,4 @@
-# tar.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 import io
@@ -59,8 +56,8 @@ def tar_do_data(data, afile):
     filelike = io.BytesIO(data)
     try:
         atar = tarfile.open(fileobj=filelike)
-    except tarfile.TarError:
-        log_error('tarfile.TarError', afile)
+    except tarfile.TarError as e:
+        log_error(str(e), afile)
         return
     tar_do_tar(atar, afile)
     atar.close()
@@ -69,9 +66,8 @@ def tar_do_data(data, afile):
 def tar_do_file(afile):
     try:
         atar = tarfile.open(afile)
-    except tarfile.TarError:
-        log_error('tarfile.TarError', afile)
+    except tarfile.TarError as e:
+        log_error(str(e), afile)
         return
     tar_do_tar(atar, afile)
     atar.close()
-

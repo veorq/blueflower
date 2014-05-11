@@ -1,4 +1,4 @@
-# pdf.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
+
 
 import io
 
@@ -27,13 +25,14 @@ from pyPdf import PdfFileReader
 
 
 def pdf_do_pdf(astream, afile):
-    text = '' 
+    """astream: stream, afile: source file name"""
+    text = ''
     try:
         pdf = PdfFileReader(astream)
         for i in range(0, pdf.getNumPages()):
             text += pdf.getPage(i).extractText() + "/n"
-    except Exception: # pyPdf raises Exception..
-        log_error('Exception in pyPdf', afile)
+    except Exception as e:  # pyPdf raises Exception..
+        log_error(str(e), afile)
         return
     text_do_data(text, afile)
 
@@ -46,7 +45,7 @@ def pdf_do_data(data, afile):
 def pdf_do_file(afile):
     try:
         fid = open(afile)
-    except IOError:
-        log_error('IOError', afile)
+    except IOError as e:
+        log_error(str(e), afile)
     pdf_do_pdf(fid, afile)
     fid.close()

@@ -1,4 +1,4 @@
-# types.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 import os
@@ -30,8 +27,8 @@ def types_from_mime(mime):
     """identifies supported types from mime type"""
     try: 
         (mimetype, mimesubtype) = mime.split('/')
-    except ValueError:
-        log_error('ValueError', mime)
+    except ValueError as e:
+        log_error(str(e), mime)
         return (constants.BF_UNKNOWN, False)
 
     if mimesubtype == 'x-bzip2':
@@ -57,10 +54,10 @@ def types_from_extension(filename):
        some types being misrecognized (some .docx as zip, etc.), it is
        called before types_from_mime
     """
-    if filename == '':
+    if not filename:
         return (constants.BF_UNKNOWN, False)
     (_, ext) = os.path.splitext(filename)
-    if ext in constants.EXTENSIONS:
+    if ext.lower() in constants.EXTENSIONS:
         return (constants.EXTENSIONS[ext], True)
     return (constants.BF_UNKNOWN, False)
 
@@ -79,11 +76,11 @@ def types_data(data, afile=''):
     """
     try:
         mime = magic.from_buffer(data, mime=True)
-    except IOError:
-        log_error('IOError', '_data')
+    except IOError as e:
+        log_error(str(e), afile)
         return ('other', False)
-    except ValueError:
-        log_error('ValueError', afile)
+    except ValueError as e:
+        log_error(str(e), afile)
         return ('other', False)
     return types_find(mime, afile)
 
@@ -92,11 +89,10 @@ def types_file(afile):
     """guess a file's type"""
     try:
         mime = magic.from_file(afile, mime=True)
-    except IOError:
-        log_error('IOError', afile)
+    except IOError as e:
+        log_error(str(e), afile)
         return ('other', False)
-    except ValueError:
-        log_error('ValueError', afile)
+    except ValueError as e:
+        log_error(str(e), afile)
         return ('other', False)
     return types_find(mime, afile)
-  

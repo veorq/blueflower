@@ -1,4 +1,4 @@
-# core.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 import getpass
@@ -31,8 +28,8 @@ from blueflower import __version__
 from blueflower.do import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
 from blueflower.types import types_file
-from blueflower.utils.log import log_comment, log_encrypted, log_secret, \
-                                 log_selected, timestamp
+from blueflower.utils.log import log_comment, log_encrypted,\
+                                 log_secret, log_selected, timestamp
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
 
 
@@ -80,20 +77,20 @@ def get_hashes(hashesfile):
         ahash = line.strip()    
         # hex string length = 2*HASH_BYTES
         if len(ahash) != 2*HASH_BYTES:
-            log_comment('invalid hash length (%d bytes): %s' % \
+            log_comment('invalid hash length (%d bytes): %s' %
                         (len(ahash), ahash))
             fail = True
             # check that it's an hex value
         try:
             int(ahash, 16)
         except ValueError:
-            log_comment('invalid hash value (should be hex string): %s' \
+            log_comment('invalid hash value (should be hex string): %s'
                         % ahash)
             fail = True
         # only record hashes if we expect to use them
         if not fail:
             hashes.append(ahash)
-    
+
     # no more fail opportunities
     if fail:
         log_comment('hashes file failed to verify, aborting...')
@@ -204,7 +201,7 @@ def main(args=sys.argv[1:]):
         return 1
 
     hashesfile = ''
-    if len(args)>1:
+    if len(args) > 1:
         hashesfile = args[1]
         if not os.path.exists(hashesfile):
             print '%s does not exist' % hashesfile
@@ -227,4 +224,3 @@ def main(args=sys.argv[1:]):
     process(selected)
     counts(logfile)
     bye()
-

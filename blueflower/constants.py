@@ -1,38 +1,35 @@
-# settings.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
-# 
+#
 # blueflower is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # blueflower is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 PROGRAM = 'blueflower'
 
 # regexes, case insensitive, add any regexes you need
 INFILE = (
-'begin certificate', # certs and CSRs
-'pass phrase',
-'passphrase',
-'password',
-'privatekey',
-'private key',
-'rsakeypair',
-'secret key',
-'secretkey',
-'sshhostkeys',
+    'begin certificate',
+    'pass phrase',
+    'passphrase',
+    'password',
+    'privatekey',
+    'private key',
+    'rsakeypair',
+    'secret key',
+    'secretkey',
+    'sshhostkeys',
 )
 
 # regexes, case insensitive
@@ -41,41 +38,41 @@ INFILE = (
 # extensions of encrypted containers in types_from_extension
 # if extension is missing, type may be detected in types_from_signature
 INFILENAME = (
-'\.jks',            # java key store
-'\.kdb',            # keypass (matches .kdbx)
-'\.key',            # openssl .key, apple .keychain, etc.
-'\.kwallet',        # kwallet
-'\.psafe3',         # passwordsafe
-'cert8.db',         # mozilla
-'connect.inc',      # sql
-'default\.pass',    # dbman
-'htaccess',         # apache/nginx
-'id_dsa',           # openssh
-'id_ecdsa',         # openssh
-'id_rsa',           # openssh
-'key3.db',          # mozilla
-'localconf',        # typo3
-'localsettings',    # wikimedia
-'passlist',         # misc
-'passwd',           # *nix & htpasswd
-'passwords',        # misc
-'pgplog',           # pgp
-'pgppolicy\.xml',   # pgp
-'pgpprefs\.xml',    # pgp
-'private',          # misc
-'secret',           # misc
-'secring',          # gnupg
-'sftp-config',      # sftp
-'shadow',           # *nix
-'spwd\.bd',         # freebsd
-'users\.xml',       # .net
-'wallet\.dat',      # bitcoin
+    '\.jks',            # java key store
+    '\.kdb',            # keypass (matches .kdbx)
+    '\.key',            # openssl .key, apple .keychain, etc.
+    '\.kwallet',        # kwallet
+    '\.psafe3',         # passwordsafe
+    'cert8.db',         # mozilla
+    'connect.inc',      # sql
+    'default\.pass',    # dbman
+    'htaccess',         # apache/nginx
+    'id_dsa',           # openssh
+    'id_ecdsa',         # openssh
+    'id_rsa',           # openssh
+    'key3.db',          # mozilla
+    'localconf',        # typo3
+    'localsettings',    # wikimedia
+    'passlist',         # misc
+    'passwd',           # *nix & htpasswd
+    'passwords',        # misc
+    'pgplog',           # pgp
+    'pgppolicy\.xml',   # pgp
+    'pgpprefs\.xml',    # pgp
+    'private',          # misc
+    'secret',           # misc
+    'secring',          # gnupg
+    'sftp-config',      # sftp
+    'shadow',           # *nix
+    'spwd\.bd',         # freebsd
+    'users\.xml',       # .net
+    'wallet\.dat',      # bitcoin
 )
 
 SKIP = (
-'.hg', 
-'.git', 
-'.svn',
+    '.hg',
+    '.git',
+    '.svn',
 )
 
 BF_BZIP2 = 'bzip2'
@@ -95,17 +92,17 @@ BF_XLSX = 'xlsx'
 BF_UNKNOWN = 'unknown'
 
 EXTENSIONS = {
-'.docx':BF_DOCX,
-'.gpg':BF_GPG,
-'.pgd':BF_PGD,
-'.pgp':BF_PGP,
-'.tc':BF_TRUECRYPT,
-'.xlsx':BF_XLSX,
+    '.docx': BF_DOCX,
+    '.gpg': BF_GPG,
+    '.pgd': BF_PGD,
+    '.pgp': BF_PGP,
+    '.tc': BF_TRUECRYPT,
+    '.xlsx': BF_XLSX,
 }
 
 ENCRYPTED = (
-BF_GPG,
-BF_PGD,
-BF_PGP,
-BF_TRUECRYPT,
+    BF_GPG,
+    BF_PGD,
+    BF_PGP,
+    BF_TRUECRYPT,
 )

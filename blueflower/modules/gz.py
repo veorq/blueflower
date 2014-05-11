@@ -1,4 +1,4 @@
-# gz.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -14,9 +14,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
 
 import io
@@ -27,13 +24,14 @@ from blueflower.do import do_data
 from blueflower.types import types_data
 from blueflower.utils.log import log_error
 
+
 # except when reading the file
 def gz_do_gz(agz, afile):
     """agz:GzipFile, afile:source file name"""
     try:
         data = agz.read()
-    except IOError:
-        log_error('IOError', afile)
+    except IOError as e:
+        log_error(str(e), afile)
         return
     (ftype, keep) = types_data(data)
     if keep:
@@ -49,8 +47,8 @@ def gz_do_data(data, afile):
     filelike = io.BytesIO(data)
     try:
         agz = gzip.GzipFile(fileobj=filelike)
-    except IOError:
-        log_error('IOError', afile)
+    except IOError as e:
+        log_error(str(e), afile)
         return
     gz_do_gz(agz, afile)
     agz.close()
@@ -59,8 +57,8 @@ def gz_do_data(data, afile):
 def gz_do_file(afile):
     try:
         agz = gzip.GzipFile(afile)
-    except IOError:
-        log_error('IOError', afile)
+    except IOError as e:
+        log_error(str(e), afile)
         return
     gz_do_gz(agz, afile)
     agz.close()
