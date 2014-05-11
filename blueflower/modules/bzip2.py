@@ -21,7 +21,7 @@ import os
 import bz2
 
 from blueflower.do import do_data
-from blueflower.types import types_data
+from blueflower.types import type_data
 from blueflower.utils.log import log_error
 
 
@@ -32,7 +32,7 @@ def bzip2_do_bzip2(abzip2, afile):
     except IOError as e:
         log_error(str(e), afile)
         return
-    (ftype, keep) = types_data(data)
+    (ftype, keep) = type_data(data)
     if keep:
         # strip any .bz2 extension 
         (root, ext) = os.path.splitext(afile)

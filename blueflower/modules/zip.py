@@ -23,7 +23,7 @@ import zipfile
 
 from blueflower.do import do_data
 from blueflower.constants import BF_ZIP, ENCRYPTED, INFILENAME
-from blueflower.types import types_data
+from blueflower.types import type_data
 from blueflower.utils.log import log_encrypted, log_error, log_secret
 
 
@@ -54,7 +54,7 @@ def zip_do_zip(azip, afile):
 
         # check file content, calling other modules
         data = azip.read(member)
-        (ftype, keep) = types_data(data, member)
+        (ftype, keep) = type_data(data, member)
         if keep:
             if ftype in ENCRYPTED:
                 log_encrypted(ftype, member)

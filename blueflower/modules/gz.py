@@ -21,7 +21,7 @@ import os
 import gzip
 
 from blueflower.do import do_data
-from blueflower.types import types_data
+from blueflower.types import type_data
 from blueflower.utils.log import log_error
 
 
@@ -33,7 +33,7 @@ def gz_do_gz(agz, afile):
     except IOError as e:
         log_error(str(e), afile)
         return
-    (ftype, keep) = types_data(data)
+    (ftype, keep) = type_data(data)
     if keep:
         # strip any .gz extension 
         (root, ext) = os.path.splitext(afile)

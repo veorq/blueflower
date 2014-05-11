@@ -60,9 +60,6 @@ def do_file(ftype, afile):
     elif ftype == constants.BF_DOCX: 
         from blueflower.modules.docx import docx_do_file
         docx_do_file(afile)
-    elif ftype == constants.BF_RAR: 
-        from blueflower.modules.rar import rar_do_file
-        rar_do_file(afile)
     elif ftype == constants.BF_PDF: 
         from blueflower.modules.pdf import pdf_do_file
         pdf_do_file(afile)

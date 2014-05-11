@@ -27,7 +27,7 @@ import sys
 from blueflower import __version__
 from blueflower.do import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
-from blueflower.types import types_file
+from blueflower.types import type_file
 from blueflower.utils.log import log_comment, log_encrypted,\
                                  log_secret, log_selected, timestamp
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
@@ -121,7 +121,7 @@ def select(directory):
             if res:
                 log_secret(res.group(), fabs)
 
-            (ftype, keep) = types_file(fabs)
+            (ftype, keep) = type_file(fabs)
 
             if keep: 
                 # if encrypted, log and do not process

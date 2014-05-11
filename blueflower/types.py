@@ -17,82 +17,77 @@
 
 
 import os
-import magic
 
 from blueflower.utils.log import log_error
-import blueflower.constants as constants
+import blueflower.constants as const
 
 
-def types_from_mime(mime):
-    """identifies supported types from mime type"""
-    try: 
-        (mimetype, mimesubtype) = mime.split('/')
-    except ValueError as e:
-        log_error(str(e), mime)
-        return (constants.BF_UNKNOWN, False)
+SIGNATURES_DICT = {
+'\x1f\x8b\x08': const.BF_GZ,
+'\x25\x50\x44\x46': const.BF_PDF,
+'\x42\x5a\x68': const.BF_BZIP2,
+'\x50\x4b\x03\x04': const.BF_ZIP,
+}
 
-    if mimesubtype == 'x-bzip2':
-        return (constants.BF_BZIP2, True)
-    elif mimetype == 'text':
-        return (constants.BF_TEXT, True)
-    elif mimesubtype == 'x-gzip':
-        return (constants.BF_GZ, True)
-    elif mimesubtype == 'pdf':
-        return (constants.BF_PDF, True)
-    elif mimesubtype == 'x-rar':
-        return (constants.BF_RAR, True)
-    elif mimesubtype == 'x-tar':
-        return (constants.BF_TAR, True)
-    elif mimesubtype == 'zip':
-        return (constants.BF_ZIP, True)
-    return (constants.BF_UNKNOWN, False)
+MAX_LEN = 1024  # to determine whether text or binary
+
+MAX_SIG_LEN = max(len(x) for x in SIGNATURES_DICT)
+
+is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
+
+TEXTCHARS = ''.join(map(chr, [7,8,9,10,12,13,27] + range(0x20, 0x100)))
 
 
-def types_from_extension(filename):
+def is_text(data):
+    """True if data is text content, False otherwise"""
+    return not bool(data.translate(None, TEXTCHARS)) 
+
+
+def type_from_signature(first_bytes):
+    """identifies supported types from signature"""
+    for sig, filetype in SIGNATURES_DICT.items():
+        if first_bytes.startswith(sig):
+            return (filetype, True)
+    return (const.BF_UNKNOWN, False)
+
+
+def type_from_extension(filename):
     """identifies supported types from file extension (for types to be
        processed, or encrypted containers);
        some types being misrecognized (some .docx as zip, etc.), it is
        called before types_from_mime
     """
     if not filename:
-        return (constants.BF_UNKNOWN, False)
+        return (const.BF_UNKNOWN, False)
     (_, ext) = os.path.splitext(filename)
-    if ext.lower() in constants.EXTENSIONS:
-        return (constants.EXTENSIONS[ext], True)
-    return (constants.BF_UNKNOWN, False)
+    if ext.lower() in const.EXTENSIONS:
+        return (const.EXTENSIONS[ext], True)
+    return (const.BF_UNKNOWN, False)
 
 
-def types_find(mime, afile=''):
-    """guess a file's type based on mime type and extension"""
-    (ftype, keep) = types_from_extension(afile)
-    if ftype != constants.BF_UNKNOWN:
+def find_type(data, afile=''):
+    """guess a file's type based on signature and extension"""
+    (ftype, keep) = type_from_extension(afile)
+    if keep:
         return (ftype, keep)
-    return types_from_mime(mime)
+    if is_text(data[:MAX_LEN]):
+        return (const.BF_TEXT, True)
+    return type_from_signature(data[:MAX_SIG_LEN])
 
 
-def types_data(data, afile=''):
+def type_data(data, afile=''):
     """guess an in-memory file's type
        optional file name (as found in archive or decompressed) 
     """
-    try:
-        mime = magic.from_buffer(data, mime=True)
-    except IOError as e:
-        log_error(str(e), afile)
-        return ('other', False)
-    except ValueError as e:
-        log_error(str(e), afile)
-        return ('other', False)
-    return types_find(mime, afile)
+    return find_type(data, afile)
 
 
-def types_file(afile):
+def type_file(afile):
     """guess a file's type"""
     try:
-        mime = magic.from_file(afile, mime=True)
+        fin = open(afile)
     except IOError as e:
         log_error(str(e), afile)
-        return ('other', False)
-    except ValueError as e:
-        log_error(str(e), afile)
-        return ('other', False)
-    return types_find(mime, afile)
+        return
+    data = fin.read(MAX_LEN)
+    return find_type(data, afile)

@@ -22,7 +22,7 @@ Features
 * *search* in the following types of files:
     - `text/*` MIME-typed files
     - PDF, DOCX, XLSX documents
-    - RAR, tar, ZIP archives
+    - tar, ZIP archives
     - bzip2, gzip compressed files/archives
 * *detection* of 
     - common key and password containers (SSH id\_\* , Apple
@@ -187,12 +187,7 @@ Dependencies
 
 Python modules:
 * [pyPdf](https://pypi.python.org/pypi/pyPdf/)
-* [python-magic](https://pypi.python.org/pypi/python-magic/)
-* [rarfile](https://pypi.python.org/pypi/rarfile/)
 * [xlrd](https://pypi.python.org/pypi/xlrd/)
-
-Other:
-* `unrar` utility
 
 
 Intellectual property

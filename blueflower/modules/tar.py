@@ -23,7 +23,7 @@ import tarfile
 
 from blueflower.do import do_data
 from blueflower.constants import ENCRYPTED, INFILENAME
-from blueflower.types import types_data
+from blueflower.types import type_data
 from blueflower.utils.log import log_encrypted, log_error, log_secret
 
 
@@ -44,7 +44,7 @@ def tar_do_tar(atar, afile):
 
         # check file content, calling other modules
         data = atar.extractfile(member).read()
-        (ftype, keep) = types_data(data, member.name)
+        (ftype, keep) = type_data(data, member.name)
         if keep:
             if ftype in ENCRYPTED:
                 log_encrypted(ftype, member.name)

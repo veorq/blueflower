@@ -79,7 +79,6 @@ BF_BZIP2 = 'bzip2'
 BF_DOCX = 'docx'
 BF_GZ = 'gz'
 BF_PDF = 'pdf'
-BF_RAR = 'rar'
 BF_TAR = 'tar'
 BF_TEXT = 'text'
 BF_ZIP = 'zip'
@@ -96,6 +95,7 @@ EXTENSIONS = {
     '.gpg': BF_GPG,
     '.pgd': BF_PGD,
     '.pgp': BF_PGP,
+    '.tar': BF_TAR,
     '.tc': BF_TRUECRYPT,
     '.xlsx': BF_XLSX,
 }
