@@ -1,8 +1,13 @@
 PROGRAM=blueflower
 RM=rm -rf
+UNINSTALL="sorry, since setuptools does not want you to uninstall modules, you have to manually remove (for example)\n/usr/local/bin/blueflower and\n/usr/local/lib/python2.7/dist-packages/blueflower-*.egg \n(these may be located elsewhere on your system)" 
+
 
 install:
 	    python setup.py install
+
+uninstall:  
+	    @echo $(UNINSTALL)
 
 clean:  
 	    $(RM) $(PROGRAM)-* $(PROGRAM)/*.pyc \

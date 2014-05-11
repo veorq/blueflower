@@ -1,6 +1,4 @@
-#!/usr/bin/python
-#
-# makehashes.py
+# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 # 
@@ -16,23 +14,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Copyright 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 
-# hashes file format:
-#
-# 1st line: regex (checked to be valid)
-# 2nd line: verifier, salt
-# 3rd line: siphash-2-2(value1, key)
-# 4th line: siphash-2-2(value2, key)
-# etc.
-#
-# where 
-#       (key, verifier, salt) = key_derivation(pwd)
-#       '+' denotes strings concatenation
-#       hashes are represented as 8-byte hex strings
-#       salts are represented as 8-byte hex strings       
 
 import getpass
 import os
@@ -47,7 +29,7 @@ EXTENSION = '.hashes'
 
 def usage():
     print 'usage: %s file' % os.path.basename(__file__)
-    print 'file must include one string per line (last name, secret key, etc.)'
+    print 'file must include one string per line'
 
 
 def main():
