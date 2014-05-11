@@ -33,8 +33,7 @@ from blueflower.utils.log import log_comment, log_encrypted,\
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
 
 
-# frozenset of hashes to detect (faster membership testing than tuple or list)
-HASHES = frozenset()
+HASHES = frozenset()  # for faster membership testing 
 HASH_KEY = 0 
 HASH_REGEX = ''
 
@@ -55,7 +54,6 @@ def get_hashes(hashesfile):
         bye()
     (key, averifier, salt) = key_derivation(pwd, salt)  
 
-    # failure is an option
     fail = False
 
     if verifier != averifier:
@@ -71,7 +69,7 @@ def get_hashes(hashesfile):
         log_comment('invalid regex')
         fail = True
 
-    # file pointer is at the 3rd line:
+    # file pointer is now at the 3rd line:
     hashes = []
     for line in fin: 
         ahash = line.strip()    
@@ -80,7 +78,7 @@ def get_hashes(hashesfile):
             log_comment('invalid hash length (%d bytes): %s' %
                         (len(ahash), ahash))
             fail = True
-            # check that it's an hex value
+        # check that the hash is an hex value
         try:
             int(ahash, 16)
         except ValueError:
@@ -91,7 +89,7 @@ def get_hashes(hashesfile):
         if not fail:
             hashes.append(ahash)
 
-    # no more fail opportunities
+    # no more failure opportunities
     if fail:
         log_comment('hashes file failed to verify, aborting...')
         bye()
