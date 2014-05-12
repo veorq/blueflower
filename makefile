@@ -33,6 +33,9 @@ all:
 	    @echo "\tmake dist\tcreates a release archive" 
 
 install:
+	    python setup.py install
+
+local:
 	    python setup.py install --user
 
 uninstall:  
