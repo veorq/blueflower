@@ -44,10 +44,7 @@ uninstall:
 clean:  
 	    $(RM) $(PROGRAM)-* $(PROGRAM)/*.pyc \
                                $(PROGRAM)/modules/*.pyc \
-			       $(PROGRAM)/utils/*.pyc   \
-			       $(PROGRAM).egg-info/   \
-			       build/   \
-			       dist/   \
+			       $(PROGRAM)/utils/*.pyc
 
 cleanall:   clean
 	    $(RM) build/ dist/ $(PROGRAM).egg-info/ 
