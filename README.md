@@ -37,7 +37,7 @@ Features
 Usage
 ------------
 
-From the projects' top directory, you can directly run
+From the project's top directory, you can directly run
 ```
 python ./blueflower/ directory [hashes]
 ```
