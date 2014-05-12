@@ -37,6 +37,8 @@ Features
 Usage
 ------------
 
+### Execution
+
 From the project's top directory, you can directly run
 ```
 python ./blueflower/ directory [hashes]
@@ -49,6 +51,18 @@ where
 
 Results are written to a log file `blueflower-YYYYMMDDhhmmss` in CSV format.
 
+(Run `make clean` if you wish to remove previous log files as well as
+`.pyc`'s.)
+
+**WARNINGS:**
+
+* no limit is set on the number of files processed (`^C` to gracefully interrupt)
+* RAR archives nested in other archives are not supported 
+* there may be a lot of false positives
+
+
+### Installation
+
 To install to the global packages directory:
 ```
 sudo make install
@@ -60,13 +74,33 @@ To install locally (to site.USER_BASE):
 make local
 ```
 
-Other targets defined: `make clean`, `make cleanall`, and `make dist`.
+(Run `make cleanall` if you wish to clean up the project's directory.)
 
-**WARNINGS:**
+blueflower can then be called from any location, assuming that the
+binaries are located in a directory included in your PATH.
 
-* no limit is set on the number of files processed (`^C` to gracefully interrupt)
-* RAR archives nested in other archives are not supported 
-* there may be a lot of false positives
+
+### Python-less execution on Windows
+
+To build a package executable on Windows machines that don't have Python
+installed, do the following (on a Windows machine with Python
+installed):
+
+1. install [py2exe](http://www.py2exe.org)
+2. in blueflower's `setup.py`, add `import py2exe`, remove the line
+```
+    version=blueflower.__version__,
+```
+and add the line
+```
+    console=['blueflower/__main__.py'],
+```
+3. run `python setup.py py2exe`
+
+This will create an executable and associated files in the `dist/` folder.
+
+
+
 
 
 Hashes file
