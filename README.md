@@ -37,24 +37,30 @@ Features
 Usage
 ------------
 
-Installation:
+From the projects' top directory, you can directly run
 ```
-sudo make
+python ./blueflower/ directory [hashes]
 ```
-(omit `sudo` on Windows)
+where
 
-Execution:
-```
-blueflower directory [hashes]
-```
+* `directory` is the root of the file structure to explore
+* `hashes` is an optional file, which should be created with the script
+`makehashes.py` (see details below)
 
 Results are written to a log file `blueflower-YYYYMMDDhhmmss` in CSV format.
 
-The `hashes` file is optional, and should be created with the script
-`makehashes.py` from a flat text file with one item per line.
-More details below.
+To install to the global packages directory:
+```
+sudo make install
+```
+(omit `sudo` on Windows)
 
-The `makefile` defines `make clean`, `make cleanall`, and `make dist`.
+To install locally (to site.USER_BASE):
+```
+make local
+```
+
+Other targets defined: `make clean`, `make cleanall`, and `make dist`.
 
 **WARNINGS:**
 
