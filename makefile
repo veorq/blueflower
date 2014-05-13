@@ -42,9 +42,12 @@ uninstall:
 	    @echo $(UNINSTALL)
 
 clean:  
-	    $(RM) $(PROGRAM)-* $(PROGRAM)/*.pyc \
-                               $(PROGRAM)/modules/*.pyc \
-			       $(PROGRAM)/utils/*.pyc
+	    $(RM) $(PROGRAM)-* $(PROGRAM)/*.pyc                 \
+                               $(PROGRAM)/modules/*.pyc         \
+			       $(PROGRAM)/utils/*.pyc           \
+			       $(PROGRAM)/__pycache__/          \
+			       $(PROGRAM)/modules/__pycache__/  \
+			       $(PROGRAM)/utils/__pycache__/    
 
 cleanall:   clean
 	    $(RM) build/ dist/ $(PROGRAM).egg-info/ 
