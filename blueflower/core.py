@@ -101,13 +101,53 @@ def get_hashes(hashesfile):
     log_comment('hashes file successfully verified')
 
 
-def select(directory):
+def init(path):
+    """determinines size and number of files"""
+    log_comment('initialization...')
+    total_size = 0
+    count = 0
+    for root, dirs, files in os.walk(path):
+
+        # skip uninteresting places
+        for skip in SKIP:
+            if skip in dirs:
+                dirs.remove(skip)
+
+        for afile in files:
+            apath = os.path.join(root, afile)
+            count += 1
+            try:
+                total_size += os.path.getsize(apath)
+            except OSError as e:
+                log_error(str(e), afile)
+
+    readable = total_size  
+    for unit in ['bytes','KiB','MiB','GiB','TiB']:
+        if readable < 1024:
+            log_comment('%d files, %3.1f %s' % (count, readable, unit))
+            return count 
+        readable /= 1024.0
+
+
+# TODO
+def scan(path, count):
     """selects files to process, checks file names"""
-    log_comment('selecting files...')
-    selected = []
+    log_comment('scanning files...')
     infilename = re.compile('|'.join(INFILENAME))
 
-    for root, dirs, files in os.walk(directory):
+    scanned = 0
+
+    # progress bar init
+    bar_width = 32
+    sys.stdout.write("[%s]" % (" " * (bar_width+1)))
+    sys.stdout.flush()
+    sys.stdout.write("\b" * (bar_width+2)) 
+    bar_blocksize = count/bar_width
+    bar_count = 0
+
+    for root, dirs, files in os.walk(path):
+
+        # skip uninteresting places
         for skip in SKIP:
             if skip in dirs:
                 dirs.remove(skip)
@@ -125,30 +165,36 @@ def select(directory):
                 # if encrypted, log and do not process
                 if ftype in ENCRYPTED:
                     log_encrypted(ftype, afile)
-                # otherwise, select file for processing
+                # otherwise, process file 
                 else:
-                    selected.append((fabs, ftype))
-                    log_selected(ftype, fabs)
+                    do_file(ftype, fabs)
+                    scanned += 1
+                    bar_count += 1
+                    if bar_count >= bar_blocksize:
+                        sys.stdout.write("=")
+                        sys.stdout.flush()
+                        bar_count = 0
+    sys.stdout.write("\n")
 
-    log_comment('%d files selected' % len(selected))
-    return selected
+    log_comment('%d files supported have been processed' % scanned)
+    return scanned
 
 
 def process(selected):
     """checks content of selected files"""
     log_comment('processing files selected...')
     nbselected = len(selected)
-    min_files_for_toolbar = 128
+    min_files_for_progressbar = 128
 
-    if nbselected < min_files_for_toolbar:
+    if nbselected < min_files_for_progressbar:
         for afile, ftype in selected:
             do_file(ftype, afile)
     else:
-        toolbar_width = 64
-        sys.stdout.write("[%s]" % (" " * toolbar_width))
+        progressbar_width = 64
+        sys.stdout.write("[%s]" % (" " * progressbar_width))
         sys.stdout.flush()
-        sys.stdout.write("\b" * (toolbar_width+1)) 
-        blocksize = len(selected)/toolbar_width
+        sys.stdout.write("\b" * (progressbar_width+1)) 
+        blocksize = len(selected)/progressbar_width
         count = 0
 
         for afile, ftype in selected:
@@ -163,7 +209,7 @@ def process(selected):
     log_comment('processing completed')
 
 
-def counts(logfile):
+def count_secrets(logfile):
     logs = open(logfile).read()
     secrets = logs.count('SECRET,')
     log_comment('%d files or strings flagged as "secret"' % secrets)
@@ -218,7 +264,7 @@ def main(args=sys.argv[1:]):
 
     if hashesfile:
         get_hashes(hashesfile) 
-    selected = select(path)
-    process(selected)
-    counts(logfile)
+    count = init(path)
+    scan(path, count)
+    count_secrets(logfile)
     bye()

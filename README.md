@@ -41,7 +41,7 @@ Usage
 
 From the project's top directory, you can directly run
 ```
-python ./blueflower/ directory [hashes]
+python blueflower.py directory [hashes]
 ```
 where
 
