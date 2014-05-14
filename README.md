@@ -100,7 +100,7 @@ and add the line
 This will create an executable and associated files in the `dist/` folder.
 
 Make sure that the external modules are installed as
-unzipped eggs rather than as `.egg` files (`easy\_install` option
+unzipped eggs rather than as `.egg` files (easy_install option
 `--always-unzip`).
 
 
