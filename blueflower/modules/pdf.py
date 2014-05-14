@@ -21,7 +21,7 @@ import io
 from blueflower.modules.text import text_do_data
 from blueflower.utils.log import log_error
 
-from pyPdf import PdfFileReader
+from PyPDF2 import PdfFileReader
 
 
 def pdf_do_pdf(astream, afile):
@@ -44,7 +44,7 @@ def pdf_do_data(data, afile):
 
 def pdf_do_file(afile):
     try:
-        fid = open(afile)
+        fid = open(afile, 'rb')
     except IOError as e:
         log_error(str(e), afile)
     pdf_do_pdf(fid, afile)

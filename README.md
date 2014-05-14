@@ -232,7 +232,7 @@ Dependencies
 ------------
 
 Python modules:
-* [pyPdf](https://pypi.python.org/pypi/pyPdf/)
+* [PyPDF2](https://pypi.python.org/pypi/PyPDF2/)
 * [xlrd](https://pypi.python.org/pypi/xlrd/)
 
 

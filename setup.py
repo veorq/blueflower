@@ -21,7 +21,7 @@ import blueflower
 
 requirements = [
     'xlrd>=0.9.3',
-    'pyPdf>=1.13',
+    'PyPDF2>=1.21',
 ]
 
 setup(
