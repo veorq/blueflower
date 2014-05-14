@@ -47,7 +47,7 @@ where
 
 * `directory` is the root of the file structure to explore
 * `hashes` is an optional file, which should be created with the script
-`makehashes.py` (see details below)
+[`makehashes.py`](makehashes.py) (see details below)
 
 Results are written to a log file `blueflower-YYYYMMDDhhmmss` in CSV format.
 
@@ -234,10 +234,11 @@ Python modules:
 Intellectual property
 ---------------------
 
-blueflower is released under GPLv3, and is copyright (c) 2014 Jean-Philippe Aumasson.
+blueflower is copyright (c) 2014 Jean-Philippe Aumasson, and under
+[GPLv3](LICENSE).
 
-The `siphash.py` module, under MIT license, is copyright (c) 2013
-Philipp Jovanovic.
+The [`siphash.py`](blueflower/utils/siphash.py) module is copyright (c)
+2013 Philipp Jovanovic, and under MIT license.
 
 The drawing in the image `blueflower.jpg` is copyright (c) 2014 Melina
-Aumasson.
+Aumasson, and under [CC BY-NC-ND 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/).
