@@ -224,6 +224,21 @@ def usage():
     """prints usage"""
     print 'usage: %s directory [hashes]' % PROGRAM
 
+def banner():
+    flower = r"""
+        .--'|}         _   ,
+       /    /}}  -====;o`\/ }
+     .=\.--'`\}        \-'\-'----.
+    //` '---./`         \ |-..-'`
+    ||  /|              /\/\
+     \\| |              `--`
+   |\_\\/
+   \__/\\ 
+        \\   %s - %s
+         \|
+    """ % (PROGRAM, __version__)
+    print flower 
+
 
 def signal_handler(*_):
     """interrupt upon ^C"""
@@ -259,7 +274,7 @@ def main(args=sys.argv[1:]):
                         format='%(message)s',
                         level=logging.INFO)
 
-    log_comment('starting %s version %s' % (PROGRAM, __version__))
+    banner()
     log_comment('writing to %s' % logfile)
 
     if hashesfile:
