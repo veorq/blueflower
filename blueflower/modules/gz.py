@@ -33,8 +33,8 @@ def gz_do_gz(agz, afile):
     except IOError as e:
         log_error(str(e), afile)
         return
-    (ftype, keep) = type_data(data)
-    if keep:
+    (ftype, supported) = type_data(data)
+    if supported:
         # strip any .gz extension 
         (root, ext) = os.path.splitext(afile)
         if ext.lower() == '.gz':

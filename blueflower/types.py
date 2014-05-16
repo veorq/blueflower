@@ -18,6 +18,7 @@
 
 import os
 
+
 from blueflower.utils.log import log_error
 import blueflower.constants as const
 
@@ -67,9 +68,9 @@ def type_from_extension(filename):
 
 def find_type(data, afile=''):
     """guess a file's type based on signature and extension"""
-    (ftype, keep) = type_from_extension(afile)
-    if keep:
-        return (ftype, keep)
+    (ftype, supported) = type_from_extension(afile)
+    if supported:
+        return (ftype, supported)
     if is_text(data[:MAX_LEN]):
         return (const.BF_TEXT, True)
     return type_from_signature(data[:MAX_SIG_LEN])

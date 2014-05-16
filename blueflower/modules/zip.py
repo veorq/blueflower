@@ -54,8 +54,8 @@ def zip_do_zip(azip, afile):
 
         # check file content, calling other modules
         data = azip.read(member)
-        (ftype, keep) = type_data(data, member)
-        if keep:
+        (ftype, supported) = type_data(data, member)
+        if supported:
             if ftype in ENCRYPTED:
                 log_encrypted(ftype, member)
             else:

@@ -44,8 +44,8 @@ def tar_do_tar(atar, afile):
 
         # check file content, calling other modules
         data = atar.extractfile(member).read()
-        (ftype, keep) = type_data(data, member.name)
-        if keep:
+        (ftype, supported) = type_data(data, member.name)
+        if supported:
             if ftype in ENCRYPTED:
                 log_encrypted(ftype, member.name)
             else:

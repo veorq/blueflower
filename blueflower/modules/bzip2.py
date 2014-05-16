@@ -32,8 +32,8 @@ def bzip2_do_bzip2(abzip2, afile):
     except IOError as e:
         log_error(str(e), afile)
         return
-    (ftype, keep) = type_data(data)
-    if keep:
+    (ftype, supported) = type_data(data)
+    if supported:
         # strip any .bz2 extension 
         (root, ext) = os.path.splitext(afile)
         if ext.lower() == '.bz2':

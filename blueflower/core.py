@@ -28,7 +28,7 @@ from blueflower import __version__
 from blueflower.do import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
 from blueflower.types import type_file
-from blueflower.utils.log import log_comment, log_encrypted,\
+from blueflower.utils.log import log_comment, log_encrypted, log_error,\
                                  log_secret, log_selected, timestamp
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
 
@@ -152,60 +152,31 @@ def scan(path, count):
                 dirs.remove(skip)
 
         for afile in files:
-            fabs = os.path.abspath(os.path.join(root, afile))
+            abspath = os.path.abspath(os.path.join(root, afile))
 
             res = infilename.search(afile.lower())
             if res:
-                log_secret(res.group(), fabs)
+                log_secret(res.group(), abspath)
 
-            (ftype, keep) = type_file(fabs)
+            (ftype, supported) = type_file(abspath)
 
-            if keep: 
-                # if encrypted, log and do not process
-                if ftype in ENCRYPTED:
+            if supported:  
+                if ftype in ENCRYPTED:  # report but do not process 
                     log_encrypted(ftype, afile)
-                # otherwise, process file 
-                else:
-                    do_file(ftype, fabs)
+                else:  
+                    do_file(ftype, abspath)
                     scanned += 1
                     bar_count += 1
                     if bar_count >= bar_blocksize:
                         sys.stdout.write("=")
                         sys.stdout.flush()
                         bar_count = 0
+
     sys.stdout.write("\n")
 
     log_comment('%d files supported have been processed' % scanned)
     return scanned
 
-
-def process(selected):
-    """checks content of selected files"""
-    log_comment('processing files selected...')
-    nbselected = len(selected)
-    min_files_for_progressbar = 128
-
-    if nbselected < min_files_for_progressbar:
-        for afile, ftype in selected:
-            do_file(ftype, afile)
-    else:
-        progressbar_width = 64
-        sys.stdout.write("[%s]" % (" " * progressbar_width))
-        sys.stdout.flush()
-        sys.stdout.write("\b" * (progressbar_width+1)) 
-        blocksize = len(selected)/progressbar_width
-        count = 0
-
-        for afile, ftype in selected:
-            do_file(ftype, afile)
-            count += 1
-            if count >= blocksize:
-                sys.stdout.write("=")
-                sys.stdout.flush()
-                count = 0
-        sys.stdout.write("\n")
-
-    log_comment('processing completed')
 
 
 def count_secrets(logfile):

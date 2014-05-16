@@ -31,6 +31,8 @@ def log_comment(comment):
 def log_encrypted(ftype, filename=''):
     log('ENCRYPTED, %s, %s' % (ftype, filename))
 
+def log_entropy(ftype, filename=''):
+    log('ENTROPY, %s, %s' % (ftype, filename))
 
 def log_error(error, filename=''):
     log('ERROR, %s, %s' % (error, filename))
