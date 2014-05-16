@@ -129,7 +129,6 @@ def init(path):
         readable /= 1024.0
 
 
-# TODO
 def scan(path, count):
     """selects files to process, checks file names"""
     log_comment('scanning files...')

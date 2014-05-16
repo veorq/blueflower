@@ -37,6 +37,9 @@ Features
 Usage
 ------------
 
+blueflower is written for Python 2.7. It will not work on Python 3.x.
+
+
 ### Execution
 
 From the project's top directory, you can directly run
