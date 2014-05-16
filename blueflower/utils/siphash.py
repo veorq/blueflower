@@ -1,5 +1,5 @@
 # Copyright (c) 2013 Philipp Jovanovic
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
 # "Software"), to deal in the Software without restriction, including
@@ -22,9 +22,9 @@
 
 class SipHash:
     def __init__(self, c=2, d=4):
-        assert c >= 0 
-        assert d >= 0 
-        self._c = c 
+        assert c >= 0
+        assert d >= 0
+        self._c = c
         self._d = d
         self._mask = 0xffffffffffffffff
 
@@ -71,17 +71,17 @@ class SipHash:
         self._msg.append(s)
 
     def _rotl(self, v, r):
-        return (((v << r) & self._mask) | (v >> (64 - r))) 
+        return (((v << r) & self._mask) | (v >> (64 - r)))
 
     def _sip_round(self):
-        self._v[0] += self._v[1] 
+        self._v[0] += self._v[1]
         self._v[2] += self._v[3]
         self._v[2] &= self._mask
         self._v[0] &= self._mask
         self._v[1] = self._rotl(self._v[1], 13)
         self._v[3] = self._rotl(self._v[3], 16)
-        self._v[1] ^= self._v[0] 
-        self._v[3] ^= self._v[2] 
+        self._v[1] ^= self._v[0]
+        self._v[3] ^= self._v[2]
         self._v[0] = self._rotl(self._v[0], 32)
         self._v[2] += self._v[1]
         self._v[0] += self._v[3]

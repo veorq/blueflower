@@ -1,17 +1,17 @@
 # copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
-# 
+#
 # blueflower is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # blueflower is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -28,13 +28,13 @@ from blueflower import __version__
 from blueflower.do import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
 from blueflower.types import type_file
-from blueflower.utils.log import log_comment, log_encrypted, log_error,\
-                                 log_secret, log_selected, timestamp
+from blueflower.utils.log import log_comment, log_encrypted, log_error, \
+    log_secret, log_selected, timestamp
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
 
 
-HASHES = frozenset()  # for faster membership testing 
-HASH_KEY = 0 
+HASHES = frozenset()  # for faster membership testing
+HASH_KEY = 0
 HASH_REGEX = ''
 
 
@@ -45,14 +45,14 @@ def get_hashes(hashesfile):
     global HASH_REGEX
     log_comment('verifying hashes file %s...' % hashesfile)
     pwd = getpass.getpass('password: ')
-    fin = open(hashesfile)     
+    fin = open(hashesfile)
     regex = fin.readline().rstrip('\n')
     try:
         (salt, verifier) = fin.readline().rstrip('\n').split(',')
     except ValueError:
-        log_comment('failed to extract verifier and salt')    
+        log_comment('failed to extract verifier and salt')
         bye()
-    (key, averifier, salt) = key_derivation(pwd, salt)  
+    (key, averifier, salt) = key_derivation(pwd, salt)
 
     fail = False
 
@@ -71,8 +71,8 @@ def get_hashes(hashesfile):
 
     # file pointer is now at the 3rd line:
     hashes = []
-    for line in fin: 
-        ahash = line.strip()    
+    for line in fin:
+        ahash = line.strip()
         # hex string length = 2*HASH_BYTES
         if len(ahash) != 2*HASH_BYTES:
             log_comment('invalid hash length (%d bytes): %s' %
@@ -95,7 +95,7 @@ def get_hashes(hashesfile):
         bye()
 
     # record hashes and key, notifies of duplicates
-    HASHES = frozenset(hashes)    
+    HASHES = frozenset(hashes)
     log_comment('%d hashes read, %d uniques' % (len(hashes), len(HASHES)))
     log_comment('using regex %s' % HASH_REGEX)
     log_comment('hashes file successfully verified')
@@ -121,11 +121,11 @@ def init(path):
             except OSError as e:
                 log_error(str(e), afile)
 
-    readable = total_size  
-    for unit in ['bytes','KiB','MiB','GiB','TiB']:
+    readable = total_size
+    for unit in ['bytes', 'KiB', 'MiB', 'GiB', 'TiB']:
         if readable < 1024:
             log_comment('%d files, %3.1f %s' % (count, readable, unit))
-            return count 
+            return count
         readable /= 1024.0
 
 
@@ -140,7 +140,7 @@ def scan(path, count):
     bar_width = 32
     sys.stdout.write("[%s]" % (" " * (bar_width+1)))
     sys.stdout.flush()
-    sys.stdout.write("\b" * (bar_width+2)) 
+    sys.stdout.write("\b" * (bar_width+2))
     bar_blocksize = count/bar_width
     bar_count = 0
 
@@ -160,10 +160,10 @@ def scan(path, count):
 
             (ftype, supported) = type_file(abspath)
 
-            if supported:  
-                if ftype in ENCRYPTED:  # report but do not process 
+            if supported:
+                if ftype in ENCRYPTED:  # report but do not process
                     log_encrypted(ftype, afile)
-                else:  
+                else:
                     do_file(ftype, abspath)
                     scanned += 1
                     bar_count += 1
@@ -176,7 +176,6 @@ def scan(path, count):
 
     log_comment('%d files supported have been processed' % scanned)
     return scanned
-
 
 
 def count_secrets(logfile):
@@ -194,6 +193,7 @@ def usage():
     """prints usage"""
     print 'usage: %s directory [hashes]' % PROGRAM
 
+
 def banner():
     flower = r"""
         .--'|}         _   ,
@@ -203,11 +203,11 @@ def banner():
     ||  /|              /\/\
      \\| |              `--`
    |\_\\/
-   \__/\\ 
+   \__/\\
         \\   %s - %s
          \|
     """ % (PROGRAM, __version__)
-    print flower 
+    print flower
 
 
 def signal_handler(*_):
@@ -240,7 +240,7 @@ def main(args=sys.argv[1:]):
     signal.signal(signal.SIGINT, signal_handler)
 
     logfile = '%s-%s' % (PROGRAM, timestamp())
-    logging.basicConfig(filename=logfile, 
+    logging.basicConfig(filename=logfile,
                         format='%(message)s',
                         level=logging.INFO)
 
@@ -248,7 +248,7 @@ def main(args=sys.argv[1:]):
     log_comment('writing to %s' % logfile)
 
     if hashesfile:
-        get_hashes(hashesfile) 
+        get_hashes(hashesfile)
     count = init(path)
     scan(path, count)
     count_secrets(logfile)
