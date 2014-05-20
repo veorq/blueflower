@@ -45,9 +45,5 @@ def log_secret(secret, filename=''):
     log('SECRET, %s, %s' % (secret, filename))
 
 
-def log_selected(ftype, filename):
-    log('SELECTED, %s, %s' % (ftype, filename))
-
-
 def timestamp():
     return time.strftime("%Y%m%d%H%M%S", time.localtime())

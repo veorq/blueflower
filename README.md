@@ -180,21 +180,19 @@ For example, the first 5 lines of a `.hashes` file can be
 
 #### Key derivation
 
-A 128-bit key is derived from the password using SipHash-1000-100000 (the
+A 128-bit key is derived from the password using SipHash-1000-20000 (the
 [SipHash](https://131002.net/siphash) PRF with 1000 compression rounds
-and 100000 finalization rounds).
-Evaluating SipHash-1000-100000 takes approximately two seconds on an AMD
-FX-8150 at 3.6GHz.
-It should be slow enough to mitigate bruteforce attacks, and the use of
+and 20000 finalization rounds).
+This should be slow enough to mitigate bruteforce attacks, and the use of
 a salt makes precomputation useless.
 
-SipHash-1000-100000 was chosen rather than a dedicated password hashing
+SipHash-1000-20000 was chosen rather than a dedicated password hashing
 scheme (bcrypt/scrypt/PBKDF2) to preserve simplicity, minimize
 dependencies, and because the GPU-friendliness of SipHash can be
 compensated by really slow hashing.
 
 The hashing speed is mostly independent of the password's length, since
-the 100000-iteration bottleneck is the finalization.
+the 20000-iteration bottleneck is the finalization.
 
 
 #### Verifier and salt

@@ -25,7 +25,7 @@ from blueflower.utils.siphash import SipHash
 HASH_BYTES = 8
 SALT_BYTES = 8
 SIPHASH_FAST = SipHash(2, 2)
-SIPHASH_SLOW = SipHash(1000, 100000)
+SIPHASH_SLOW = SipHash(1000, 20000)
 
 
 def tohex(anint):

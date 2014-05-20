@@ -23,17 +23,16 @@ import re
 import signal
 import sys
 
-
 from blueflower import __version__
-from blueflower.do import do_file
 from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
+from blueflower.do import do_file
 from blueflower.types import type_file
-from blueflower.utils.log import log_comment, log_encrypted, log_error, \
-    log_secret, log_selected, timestamp
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
+from blueflower.utils.log import log_comment, log_encrypted, log_error, \
+    log_secret, timestamp
 
 
-HASHES = frozenset()  # for faster membership testing
+HASHES = frozenset()
 HASH_KEY = 0
 HASH_REGEX = ''
 
@@ -48,15 +47,15 @@ def get_hashes(hashesfile):
     fin = open(hashesfile)
     regex = fin.readline().rstrip('\n')
     try:
-        (salt, verifier) = fin.readline().rstrip('\n').split(',')
+        (salt, verifier_file) = fin.readline().rstrip('\n').split(',')
     except ValueError:
         log_comment('failed to extract verifier and salt')
         bye()
-    (key, averifier, salt) = key_derivation(pwd, salt)
+    (key, verifier_pwd, salt) = key_derivation(pwd, salt)
 
     fail = False
 
-    if verifier != averifier:
+    if verifier_pwd != verifier_file:
         log_comment('verifier does not match (incorrect password?)')
         fail = True
     else:
@@ -71,9 +70,9 @@ def get_hashes(hashesfile):
 
     # file pointer is now at the 3rd line:
     hashes = []
+
     for line in fin:
         ahash = line.strip()
-        # hex string length = 2*HASH_BYTES
         if len(ahash) != 2*HASH_BYTES:
             log_comment('invalid hash length (%d bytes): %s' %
                         (len(ahash), ahash))
@@ -82,16 +81,13 @@ def get_hashes(hashesfile):
         try:
             int(ahash, 16)
         except ValueError:
-            log_comment('invalid hash value (should be hex string): %s'
-                        % ahash)
+            log_comment('invalid hash value: %s' % ahash)
             fail = True
-        # only record hashes if we expect to use them
         if not fail:
             hashes.append(ahash)
 
-    # no more failure opportunities
     if fail:
-        log_comment('hashes file failed to verify, aborting...')
+        log_comment('hashes file failed to verify, aborting')
         bye()
 
     # record hashes and key, notifies of duplicates
@@ -106,13 +102,11 @@ def init(path):
     log_comment('initialization...')
     total_size = 0
     count = 0
-    for root, dirs, files in os.walk(path):
 
-        # skip uninteresting places
+    for root, dirs, files in os.walk(path):
         for skip in SKIP:
             if skip in dirs:
                 dirs.remove(skip)
-
         for afile in files:
             apath = os.path.join(root, afile)
             count += 1
@@ -122,6 +116,7 @@ def init(path):
                 log_error(str(e), afile)
 
     readable = total_size
+
     for unit in ['bytes', 'KiB', 'MiB', 'GiB', 'TiB']:
         if readable < 1024:
             log_comment('%d files, %3.1f %s' % (count, readable, unit))
@@ -135,25 +130,23 @@ def scan(path, count):
     infilename = re.compile('|'.join(INFILENAME))
 
     scanned = 0
-
-    # progress bar init
+    
     bar_width = 32
-    sys.stdout.write("[%s]" % (" " * (bar_width+1)))
+    if count < bar_width:
+        bar_width = count
+    sys.stdout.write("[%s]" % (" " * (bar_width)))
     sys.stdout.flush()
-    sys.stdout.write("\b" * (bar_width+2))
+    sys.stdout.write("\b" * (bar_width+1))
     bar_blocksize = count/bar_width
+    bar_left = bar_width
     bar_count = 0
 
     for root, dirs, files in os.walk(path):
-
-        # skip uninteresting places
         for skip in SKIP:
             if skip in dirs:
                 dirs.remove(skip)
-
         for afile in files:
             abspath = os.path.abspath(os.path.join(root, afile))
-
             res = infilename.search(afile.lower())
             if res:
                 log_secret(res.group(), abspath)
@@ -166,14 +159,15 @@ def scan(path, count):
                 else:
                     do_file(ftype, abspath)
                     scanned += 1
-                    bar_count += 1
-                    if bar_count >= bar_blocksize:
-                        sys.stdout.write("=")
-                        sys.stdout.flush()
-                        bar_count = 0
+            # update progress bar
+            bar_count += 1
+            if bar_count >= bar_blocksize and bar_left:
+                sys.stdout.write("=")
+                sys.stdout.flush()
+                bar_count = 0
+                bar_left -= 1
 
     sys.stdout.write("\n")
-
     log_comment('%d files supported have been processed' % scanned)
     return scanned
 
@@ -218,7 +212,6 @@ def signal_handler(*_):
 
 
 def main(args=sys.argv[1:]):
-    """main function"""
     if (len(args) < 1):
         usage()
         return 1
@@ -243,7 +236,6 @@ def main(args=sys.argv[1:]):
     logging.basicConfig(filename=logfile,
                         format='%(message)s',
                         level=logging.INFO)
-
     banner()
     log_comment('writing to %s' % logfile)
 
