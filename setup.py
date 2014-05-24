@@ -21,7 +21,7 @@ import blueflower
 
 requirements = [
     'xlrd>=0.9.3',
-    'PyPDF2>=1.21',
+    'pdfminer>=20140328',
 ]
 
 setup(

@@ -54,7 +54,7 @@ def type_from_extension(filename):
     """identifies supported types from file extension (for types to be
        processed, or encrypted containers);
        some types being misrecognized (some .docx as zip, etc.), it is
-       called before types_from_mime
+       called before type_from_signature
     """
     if not filename:
         return (const.BF_UNKNOWN, False)

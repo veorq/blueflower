@@ -233,7 +233,7 @@ Dependencies
 ------------
 
 Python modules:
-* [PyPDF2](https://pypi.python.org/pypi/PyPDF2/)
+* [pdfminer](https://pypi.python.org/pypi/pdfminer/)
 * [xlrd](https://pypi.python.org/pypi/xlrd/)
 
 

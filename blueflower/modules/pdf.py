@@ -21,20 +21,25 @@ import io
 from blueflower.modules.text import text_do_data
 from blueflower.utils.log import log_error
 
-from PyPDF2 import PdfFileReader
-
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
 
 def pdf_do_pdf(astream, afile):
-    """astream: stream, afile: source file name"""
-    text = ''
-    try:
-        pdf = PdfFileReader(astream)
-        for i in range(0, pdf.getNumPages()):
-            text += pdf.getPage(i).extractText() + "/n"
-    except Exception as e:  # pyPdf raises Exception..
-        log_error(str(e), afile)
-        return
+    outstream = io.BytesIO()
+    laparams = LAParams()
+    rsrcmgr = PDFResourceManager(caching=True)
+    device = TextConverter(rsrcmgr, outstream, codec='utf-8', laparams=laparams,
+                               imagewriter=None)
+    interpreter = PDFPageInterpreter(rsrcmgr, device)
+    for page in PDFPage.get_pages(astream, set(),
+                                  maxpages=0, password='',
+                                  caching=True, check_extractable=True):
+        interpreter.process_page(page)
+    text = outstream.getvalue()
     text_do_data(text, afile)
+    outstream.close()
 
 
 def pdf_do_data(data, afile):
