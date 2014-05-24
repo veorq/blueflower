@@ -26,6 +26,7 @@ from pdfminer.layout import LAParams
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 
+
 def pdf_do_pdf(astream, afile):
     outstream = io.BytesIO()
     laparams = LAParams()
