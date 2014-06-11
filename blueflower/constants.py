@@ -23,10 +23,10 @@ INFILE = (
     '^begin certificate',
     '^passphrase',
     '^password',
-    '^private key',
+    '^private[ -_]key',
     '^privatekey',
     '^rsakeypair',
-    '^secret key',
+    '^secret[ -_]key',
     '^secretkey',
     '^sshhostkeys',
 )
@@ -52,6 +52,8 @@ INFILENAME = (
     'key3.db',          # mozilla
     'localconf',        # typo3
     'localsettings',    # wikimedia
+    'otr.fingerprints', # libpurple otr fingerprints
+    'otr.private_key',  # libpurple otr keys
     'passlist',         # misc
     'passwd',           # *nix & htpasswd
     'passwords',        # misc
