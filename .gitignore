@@ -1,7 +1,7 @@
 build/
 dist/
 examples/
-custom/
+internal/
 blueflower-2*
 blueflower.egg-info/
 blueflower/*.pyc
