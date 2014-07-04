@@ -50,7 +50,7 @@ def get_hashes(hashesfile):
         (salt, verifier_file) = fin.readline().rstrip('\n').split(',')
     except ValueError:
         log_comment('failed to extract verifier and salt')
-        bye()
+        exit_fail()
     (key, verifier_pwd, salt) = key_derivation(pwd, salt)
 
     fail = False
@@ -88,7 +88,7 @@ def get_hashes(hashesfile):
 
     if fail:
         log_comment('hashes file failed to verify, aborting')
-        bye()
+        exit_fail()
 
     # record hashes and key, notifies of duplicates
     HASHES = frozenset(hashes)
@@ -180,7 +180,16 @@ def count_secrets(logfile):
 
 def bye():
     print 'thank you for using %s, please report bugs' % PROGRAM
+
+
+def exit_fail():
+    bye()
     sys.exit(1)
+
+
+def exit_ok():
+    bye()
+    sys.exit(0)
 
 
 def usage():
@@ -208,7 +217,7 @@ def signal_handler(*_):
     """interrupt upon ^C"""
     sys.stdout.write("\n")
     log_comment('SIGINT received, quitting')
-    bye()
+    exit_ok()
 
 
 def main(args=sys.argv[1:]):
@@ -244,4 +253,4 @@ def main(args=sys.argv[1:]):
     count = init(path)
     scan(path, count)
     count_secrets(logfile)
-    bye()
+    exit_ok()
