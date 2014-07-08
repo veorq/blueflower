@@ -151,7 +151,11 @@ def scan(path, count):
             if res:
                 log_secret(res.group(), abspath)
 
-            (ftype, supported) = type_file(abspath)
+            try:
+                (ftype, supported) = type_file(abspath)
+            except TypeError:
+                log_error(str(e), abspath)
+                continue
 
             if supported:
                 if ftype in ENCRYPTED:  # report but do not process
