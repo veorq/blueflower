@@ -239,7 +239,7 @@ def main(args=sys.argv[1:]):
 
 
 def blueflower(path, hashesfile=''):
-    """runs blueflower"""
+    """runs blueflower, returns name of the log file"""
     if not os.path.exists(path):
         raise BFException('%s does not exist' % path)
 
@@ -265,3 +265,4 @@ def blueflower(path, hashesfile=''):
     count = init(path)
     scan(path, count)
     count_secrets(logfile)
+    return logfile
