@@ -52,7 +52,7 @@ def get_hashes(hashesfile):
     regex = fin.readline().rstrip('\n')
     try:
         (salt, verifier_file) = fin.readline().rstrip('\n').split(',')
-    except ValueError as e:
+    except ValueError:
         raise BFException('failed to extract verifier and salt')
 
     (key, verifier_pwd, salt) = key_derivation(pwd, salt)
@@ -133,7 +133,7 @@ def scan(path, count):
     infilename = re.compile('|'.join(INFILENAME))
 
     scanned = 0
-    
+
     bar_width = 32
     if count < bar_width:
         bar_width = count
@@ -219,7 +219,7 @@ def signal_handler(*_):
 
 def main(args=sys.argv[1:]):
     """called by the CLI script"""
-    if (len(args) < 1):
+    if len(args) < 1:
         usage()
         return -1
     path = args[0]
@@ -228,7 +228,7 @@ def main(args=sys.argv[1:]):
     if len(args) > 1:
         hashesfile = args[1]
 
-    try: 
+    try:
         blueflower(path, hashesfile)
     except BFException as e:
         print str(e)
