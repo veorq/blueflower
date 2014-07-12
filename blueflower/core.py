@@ -37,6 +37,10 @@ HASH_KEY = 0
 HASH_REGEX = ''
 
 
+class BFException(Exception):
+    pass
+
+
 def get_hashes(hashesfile):
     """gets and checks password, create hashes list"""
     global HASHES
@@ -48,9 +52,9 @@ def get_hashes(hashesfile):
     regex = fin.readline().rstrip('\n')
     try:
         (salt, verifier_file) = fin.readline().rstrip('\n').split(',')
-    except ValueError:
-        log_comment('failed to extract verifier and salt')
-        exit_fail()
+    except ValueError as e:
+        raise BFException('failed to extract verifier and salt')
+
     (key, verifier_pwd, salt) = key_derivation(pwd, salt)
 
     fail = False
@@ -87,8 +91,7 @@ def get_hashes(hashesfile):
             hashes.append(ahash)
 
     if fail:
-        log_comment('hashes file failed to verify, aborting')
-        exit_fail()
+        raise BFException('hashes file failed to verify')
 
     # record hashes and key, notifies of duplicates
     HASHES = frozenset(hashes)
@@ -186,16 +189,6 @@ def bye():
     print 'thank you for using %s, please report bugs' % PROGRAM
 
 
-def exit_fail():
-    bye()
-    sys.exit(1)
-
-
-def exit_ok():
-    bye()
-    sys.exit(0)
-
-
 def usage():
     """prints usage"""
     print 'usage: %s directory [hashes]' % PROGRAM
@@ -221,27 +214,38 @@ def signal_handler(*_):
     """interrupt upon ^C"""
     sys.stdout.write("\n")
     log_comment('SIGINT received, quitting')
-    exit_ok()
+    sys.exit(0)
 
 
 def main(args=sys.argv[1:]):
+    """called by the CLI script"""
     if (len(args) < 1):
         usage()
-        return 1
-
+        return -1
     path = args[0]
-    if not os.path.exists(path):
-        print '%s does not exist' % path
-        usage()
-        return 1
 
     hashesfile = ''
     if len(args) > 1:
         hashesfile = args[1]
+
+    try: 
+        blueflower(path, hashesfile)
+    except BFException as e:
+        print str(e)
+        usage()
+        return -1
+    bye()
+    return 0
+
+
+def blueflower(path, hashesfile=''):
+    """runs blueflower"""
+    if not os.path.exists(path):
+        raise BFException('%s does not exist' % path)
+
+    if hashesfile:
         if not os.path.exists(hashesfile):
-            print '%s does not exist' % hashesfile
-            usage()
-            return 1
+            raise BFException('%s does not exist' % path)
 
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -253,8 +257,11 @@ def main(args=sys.argv[1:]):
     log_comment('writing to %s' % logfile)
 
     if hashesfile:
-        get_hashes(hashesfile)
+        try:
+            get_hashes(hashesfile)
+        except BFException as e:
+            raise
+
     count = init(path)
     scan(path, count)
     count_secrets(logfile)
-    exit_ok()
