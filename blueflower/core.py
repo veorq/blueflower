@@ -250,6 +250,13 @@ def blueflower(path, hashesfile=''):
     signal.signal(signal.SIGINT, signal_handler)
 
     logfile = '%s-%s' % (PROGRAM, timestamp())
+
+    # reset any existing logger
+    logger = logging.getLogger()
+    if logger.handlers:
+        logger.handlers[0].stream.close()
+        logger.removeHandler(logger.handlers[0])
+
     logging.basicConfig(filename=logfile,
                         format='%(message)s',
                         level=logging.INFO)
