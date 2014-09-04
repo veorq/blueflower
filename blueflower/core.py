@@ -16,6 +16,7 @@
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import argparse
 import getpass
 import logging
 import os
@@ -41,13 +42,12 @@ class BFException(Exception):
     pass
 
 
-def get_hashes(hashesfile):
-    """gets and checks password, create hashes list"""
+def get_hashes(hashesfile, pwd):
+    """create hashes list from hashesfile using the given password"""
     global HASHES
     global HASH_KEY
     global HASH_REGEX
     log_comment('verifying hashes file %s...' % hashesfile)
-    pwd = getpass.getpass('password: ')
     fin = open(hashesfile)
     regex = fin.readline().rstrip('\n')
     try:
@@ -188,12 +188,6 @@ def count_secrets(logfile):
 def bye():
     print 'thank you for using %s, please report bugs' % PROGRAM
 
-
-def usage():
-    """prints usage"""
-    print 'usage: %s directory [hashes]' % PROGRAM
-
-
 def banner():
     flower = r"""
         .--'|}         _   ,
@@ -217,35 +211,52 @@ def signal_handler(*_):
     sys.exit(0)
 
 
-def main(args=sys.argv[1:]):
-    """called by the CLI script"""
-    if len(args) < 1:
-        usage()
-        return -1
-    path = args[0]
+def main():
+    """
+    Args definition
+    """
+    parser = argparse.ArgumentParser(description='blueflower\
+        <https://github.com/veorq/blueflower>')
+    parser.add_argument('path',\
+        help='directory to explore')
+    parser.add_argument('-H', metavar='hashesfile', required=False,\
+        help='hashes file')
+    parser.add_argument('-p', metavar='password',\
+        help='hashes file password (optional, interactive prompt otherwise)')
 
-    hashesfile = ''
-    if len(args) > 1:
-        hashesfile = args[1]
+    args = parser.parse_args()
+
+    path = args.path
+    # None if argument missing
+    hashesfile = args.H
+
+    if hashesfile:
+        # None if argument missing
+        pwd = args.p
+        if not pwd:
+            # prompt for password
+            pwd = getpass.getpass('password: ')
+    else:
+        pwd = ''
 
     try:
-        blueflower(path, hashesfile)
+        blueflower(path, hashesfile, pwd)
     except BFException as e:
         print str(e)
-        usage()
+        parser.print_usage()
         return -1
     bye()
     return 0
 
 
-def blueflower(path, hashesfile=''):
+def blueflower(path, hashesfile, pwd):
     """runs blueflower, returns name of the log file"""
     if not os.path.exists(path):
         raise BFException('%s does not exist' % path)
 
     if hashesfile:
         if not os.path.exists(hashesfile):
-            raise BFException('%s does not exist' % path)
+            raise BFException('%s does not exist' % hashesfile)
 
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -257,15 +268,18 @@ def blueflower(path, hashesfile=''):
         logger.handlers[0].stream.close()
         logger.removeHandler(logger.handlers[0])
 
+    # instantiate logger
     logging.basicConfig(filename=logfile,
                         format='%(message)s',
                         level=logging.INFO)
+
     banner()
     log_comment('writing to %s' % logfile)
 
-    if hashesfile:
+    # hash file support
+    if hashesfile and pwd:
         try:
-            get_hashes(hashesfile)
+            get_hashes(hashesfile, pwd)
         except BFException as e:
             raise
 

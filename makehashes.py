@@ -1,21 +1,22 @@
 # copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
-# 
+#
 # blueflower is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # blueflower is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import argparse
 import getpass
 import os
 import re
@@ -23,38 +24,44 @@ import sys
 
 from blueflower.utils.hashing import hash_string, key_derivation
 
-
 EXTENSION = '.hashes'
 
 
-def usage():
-    print 'usage: %s file' % os.path.basename(__file__)
-    print 'file must include one string per line'
-
-
 def main():
-    if (len(sys.argv) < 2):
-        usage()
-        return 1 
 
-    if not os.path.exists(sys.argv[1]):
-        print '%s does not exist' % sys.argv[1]
-        usage()
+    parser = argparse.ArgumentParser(\
+        description='builds password-protected hashes for hiding strings\
+            searched; see <https://github.com/veorq/blueflower#hashes-file>')
+    parser.add_argument('-p', metavar='password', required=False,\
+        help='password')
+    parser.add_argument('path',\
+        help='file containing strings to detect (one per line)')
+    parser.add_argument('regex',\
+        help='regex matching the strings to detect')
+    args = parser.parse_args()
+
+    # get path
+    path = args.path
+    if not os.path.exists(path):
+        print 'error: %s does not exist' % path
+        parser.print_usage()
         return 1
-    else:
-        path = sys.argv[1]
 
-    # ask for regex, check, copy at top of file
-    regex = raw_input('regex: ')
+    # get regex and check validity
+    regex = args.regex
     try:
         re.compile(regex)
     except re.error:
         print 'error: invalid regex'
+        parser.print_usage()
         return 1
 
-    # prompt for password, derive key
-    pwd = getpass.getpass('password: ')
-    (key, verifier, salt) = key_derivation(pwd)  
+    # get password and derive values
+    if args.p:
+        pwd = args.p
+    else:
+        pwd = getpass.getpass('password: ')
+    (key, verifier, salt) = key_derivation(pwd)
 
     # create output file at the place as input
     hashesfile = path + EXTENSION
@@ -62,6 +69,8 @@ def main():
         fout = open(hashesfile, 'w')
     except IOError:
         print 'error: failed to create %s' % hashesfile
+        parser.print_usage()
+        return 1
 
     # write regex, salt, and verifier
     towrite = '%s\n%s,%s\n' % (regex, salt, verifier)
