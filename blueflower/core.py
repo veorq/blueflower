@@ -227,11 +227,11 @@ def main():
     args = parser.parse_args()
 
     path = args.path
-    # None if argument missing
+    # = None if argument missing
     hashesfile = args.H
 
     if hashesfile:
-        # None if argument missing
+        # = None if argument missing
         pwd = args.p
         if not pwd:
             # prompt for password
