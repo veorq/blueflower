@@ -27,6 +27,33 @@ from blueflower.utils.hashing import hash_string, key_derivation
 EXTENSION = '.hashes'
 
 
+def makehashes(path, regex, pwd):
+    (key, verifier, salt) = key_derivation(pwd)
+
+    # create output file at the place as input
+    hashesfile = path + EXTENSION
+    try:
+        fout = open(hashesfile, 'w')
+    except IOError:
+        print 'error: failed to create %s' % hashesfile
+        parser.print_usage()
+        return 1
+
+    # write regex, salt, and verifier
+    towrite = '%s\n%s,%s\n' % (regex, salt, verifier)
+    fout.write(towrite)
+
+    # speed not critical, so write line per line
+    with open(path) as fin:
+        for line in fin:
+            linestring = line.rstrip('\n').strip()
+            towrite = '%s\n' % hash_string(linestring, key)
+            fout.write(towrite)
+    fout.close()
+
+    return 0
+
+
 def main():
 
     parser = argparse.ArgumentParser(\
@@ -61,28 +88,8 @@ def main():
         pwd = args.p
     else:
         pwd = getpass.getpass('password: ')
-    (key, verifier, salt) = key_derivation(pwd)
 
-    # create output file at the place as input
-    hashesfile = path + EXTENSION
-    try:
-        fout = open(hashesfile, 'w')
-    except IOError:
-        print 'error: failed to create %s' % hashesfile
-        parser.print_usage()
-        return 1
-
-    # write regex, salt, and verifier
-    towrite = '%s\n%s,%s\n' % (regex, salt, verifier)
-    fout.write(towrite)
-
-    # speed not critical, so write line per line
-    with open(path) as fin:
-        for line in fin:
-            linestring = line.rstrip('\n').strip()
-            towrite = '%s\n' % hash_string(linestring, key)
-            fout.write(towrite)
-    fout.close()
+    return makehashes(path, regex, pwd)
 
 
 if __name__ == '__main__':
