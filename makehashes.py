@@ -36,7 +36,6 @@ def makehashes(path, regex, pwd):
         fout = open(hashesfile, 'w')
     except IOError:
         print 'error: failed to create %s' % hashesfile
-        parser.print_usage()
         return 1
 
     # write regex, salt, and verifier
