@@ -1,8 +1,7 @@
 build/
 dist/
 examples/
-internal/
-blueflower-2*
+blueflower-20*
 blueflower.egg-info/
 blueflower/*.pyc
 blueflower/modules/*.pyc
