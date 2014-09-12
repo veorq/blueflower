@@ -26,7 +26,6 @@ requirements = [
 
 setup(
     name='blueflower',
-    version=blueflower.__version__,
     description='simple tool searching for private keys, passwords, etc.',
     long_description=open('README.md').read(),
     url='https://github.com/veorq/blueflower',
@@ -40,4 +39,8 @@ setup(
         ],
     },
     install_requires=requirements,
+    #uncomment for py2exe
+    #console=['blueflower/__main__.py'],
+    # comment for py2exe
+    version=blueflower.__version__,
 )
