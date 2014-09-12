@@ -260,7 +260,7 @@ def blueflower(path, hashesfile, pwd):
 
     signal.signal(signal.SIGINT, signal_handler)
 
-    logfile = '%s-%s' % (PROGRAM, timestamp())
+    logfile = '%s-%s.csv' % (PROGRAM, timestamp())
 
     # reset any existing logger
     logger = logging.getLogger()
