@@ -18,7 +18,7 @@
 
 from setuptools import setup
 import blueflower
-# import py2exe
+#import py2exe
 
 requirements = [
     'xlrd>=0.9.3',
@@ -41,7 +41,7 @@ setup(
     },
     install_requires=requirements,
     # uncomment for py2exe
-    # console=['blueflower/__main__.py'],
+    #console=['blueflower/__main__.py'],
     # comment for py2exe
     version=blueflower.__version__,
 )
