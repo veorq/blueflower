@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
@@ -14,6 +16,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
+
 
 import sys
 
