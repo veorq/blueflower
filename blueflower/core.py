@@ -102,7 +102,7 @@ def get_hashes(hashesfile, pwd):
 
 def init(path):
     """determinines size and number of files"""
-    log_comment('initialization...')
+    log_comment('initializing...')
     total_size = 0
     count = 0
 
@@ -137,9 +137,7 @@ def scan(path, count):
     bar_width = 32
     if count < bar_width:
         bar_width = count
-    sys.stdout.write("[%s]" % (" " * (bar_width)))
-    sys.stdout.flush()
-    sys.stdout.write("\b" * (bar_width+1))
+    sys.stdout.write('%s\n' % ("=" * (bar_width)))
     bar_blocksize = count/bar_width
     bar_left = bar_width
     bar_count = 0
@@ -179,28 +177,20 @@ def scan(path, count):
     return scanned
 
 
-def count_secrets(logfile):
+def count_logged(logfile):
     logs = open(logfile).read()
     secrets = logs.count('SECRET,')
     log_comment('%d files or strings flagged as "secret"' % secrets)
+    encrypted = logs.count('ENCRYPTED,')
+    log_comment('%d files or strings flagged as "encrypted"' % encrypted)
 
 
 def bye():
-    print 'thank you for using %s, please report bugs' % PROGRAM
+    print 'terminating'
+
 
 def banner():
-    flower = r"""
-        .--'|}         _   ,
-       /    /}}  -====;o`\/ }
-     .=\.--'`\}        \-'\-'----.
-    //` '---./`         \ |-..-'`
-    ||  /|              /\/\
-     \\| |              `--`
-   |\_\\/
-   \__/\\
-        \\   %s - %s
-         \|
-    """ % (PROGRAM, __version__)
+    flower = 'starting %s-%s'  % (PROGRAM, __version__)
     print flower
 
 
@@ -212,9 +202,7 @@ def signal_handler(*_):
 
 
 def main():
-    """
-    Args definition
-    """
+    """main function"""
     parser = argparse.ArgumentParser(description='blueflower\
         <https://github.com/veorq/blueflower>')
     parser.add_argument('path',\
@@ -239,6 +227,8 @@ def main():
     else:
         pwd = ''
 
+    signal.signal(signal.SIGINT, signal_handler)
+
     try:
         blueflower(path, hashesfile, pwd)
     except BFException as e:
@@ -258,7 +248,6 @@ def blueflower(path, hashesfile, pwd):
         if not os.path.exists(hashesfile):
             raise BFException('%s does not exist' % hashesfile)
 
-    signal.signal(signal.SIGINT, signal_handler)
 
     logfile = '%s-%s.csv' % (PROGRAM, timestamp())
 
@@ -285,5 +274,6 @@ def blueflower(path, hashesfile, pwd):
 
     count = init(path)
     scan(path, count)
-    count_secrets(logfile)
+    count_logged(logfile)
+
     return logfile

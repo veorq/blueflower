@@ -29,7 +29,7 @@ def bzip2_do_bzip2(abzip2, afile):
     """abzip2: raw bytes, afile: source file name"""
     try:
         data = bz2.decompress(abzip2)
-    except IOError as e:
+    except (IOError, ValueError) as e:
         log_error(str(e), afile)
         return
     (ftype, supported) = type_data(data)
