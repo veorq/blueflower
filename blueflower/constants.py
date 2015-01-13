@@ -40,14 +40,19 @@ INFILENAME = (
     '\.jks',            # java key store
     '\.kdb',            # keypass (matches .kdbx)
     '\.key',            # openssl .key, apple .keychain, etc.
+    '\.log',            # misc log
+    '\.pem',            # PEM-format key
     '\.kwallet',        # kwallet
+    '\.ovpn',           # OpenVPN config
     '\.psafe3',         # passwordsafe
+    '\.pfx'.            # PRX-format keys
     'cert8.db',         # mozilla
     'connect.inc',      # sql
     'default\.pass',    # dbman
     'htaccess',         # apache/nginx
     'id_dsa',           # openssh
     'id_ecdsa',         # openssh
+    'id_ed25519',       # openssh
     'id_rsa',           # openssh
     'key3.db',          # mozilla
     'localconf',        # typo3
