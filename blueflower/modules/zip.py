@@ -39,7 +39,7 @@ def zip_do_zip(azip, afile):
         else:
             log_error(str(e), afile)
 
-    infilename = re.compile('|'.join(INFILENAME))
+    infilename = re.compile('$|'.join(INFILENAME))
 
     # iterate directly over file names
     for member in azip.namelist():

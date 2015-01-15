@@ -130,7 +130,7 @@ def init(path):
 def scan(path, count):
     """selects files to process, checks file names"""
     log_comment('scanning files...')
-    infilename = re.compile('|'.join(INFILENAME))
+    infilename = re.compile('$|'.join(INFILENAME))
 
     scanned = 0
 
