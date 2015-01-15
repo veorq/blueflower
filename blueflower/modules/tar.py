@@ -29,7 +29,7 @@ from blueflower.utils.log import log_encrypted, log_error, log_secret
 
 def tar_do_tar(atar, afile):
     """ atar:TarFile, afile:source archive(s) name """
-    infilename = re.compile('|'.join(INFILENAME))
+    infilename = re.compile('$|'.join(INFILENAME))
 
     # iterate over TarInfo's
     for member in atar.getmembers():
