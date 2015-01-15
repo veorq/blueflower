@@ -37,6 +37,7 @@ INFILE = (
 # extensions of encrypted containers in types_from_extension
 # if extension is missing, type may be detected in types_from_signature
 INFILENAME = (
+    '\.crt',            # certs
     '\.jks',            # java key store
     '\.kdb',            # keypass (matches .kdbx)
     '\.key',            # openssl .key, apple .keychain, etc.
@@ -45,6 +46,7 @@ INFILENAME = (
     '\.kwallet',        # kwallet
     '\.ovpn',           # OpenVPN config
     '\.psafe3',         # passwordsafe
+    '\.p12',            # PKCS12 data
     '\.pfx',            # PRX-format keys
     'cert8.db',         # mozilla
     'connect.inc',      # sql
