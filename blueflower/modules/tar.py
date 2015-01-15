@@ -25,12 +25,11 @@ from blueflower.do import do_data
 from blueflower.constants import ENCRYPTED, INFILENAME
 from blueflower.types import type_data
 from blueflower.utils.log import log_encrypted, log_error, log_secret
+from blueflower.core import RGX_INFILENAME
 
 
 def tar_do_tar(atar, afile):
     """ atar:TarFile, afile:source archive(s) name """
-    infilename = re.compile('$|'.join(INFILENAME))
-
     # iterate over TarInfo's
     for member in atar.getmembers():
         # only process files
@@ -38,7 +37,7 @@ def tar_do_tar(atar, afile):
             continue
         # check file name
         filename = os.path.basename(member.name).lower()
-        res = infilename.search(filename)
+        res = RGX_INFILENAME.search(filename)
         if res:
             log_secret(res.group(), afile+':'+member.name)
 

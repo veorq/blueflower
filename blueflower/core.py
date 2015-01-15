@@ -25,7 +25,7 @@ import signal
 import sys
 
 from blueflower import __version__
-from blueflower.constants import ENCRYPTED, INFILENAME, PROGRAM, SKIP
+from blueflower.constants import ENCRYPTED, INFILE, INFILENAME, PROGRAM, SKIP
 from blueflower.do import do_file
 from blueflower.types import type_file
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
@@ -36,6 +36,10 @@ from blueflower.utils.log import log_comment, log_encrypted, log_error, \
 HASHES = frozenset()
 HASH_KEY = 0
 HASH_REGEX = ''
+
+# compiled regexes used by modules
+RGX_INFILE = re.compile('')
+RGX_INFILENAME = re.compile('')
 
 
 class BFException(Exception):
@@ -130,7 +134,6 @@ def init(path):
 def scan(path, count):
     """selects files to process, checks file names"""
     log_comment('scanning files...')
-    infilename = re.compile('$|'.join(INFILENAME))
 
     scanned = 0
 
@@ -148,7 +151,7 @@ def scan(path, count):
                 dirs.remove(skip)
         for afile in files:
             abspath = os.path.abspath(os.path.join(root, afile))
-            res = infilename.search(afile.lower())
+            res = RGX_INFILENAME.search(afile.lower())
             if res:
                 log_secret(res.group(), abspath)
 
@@ -241,6 +244,9 @@ def main():
 
 def blueflower(path, hashesfile, pwd):
     """runs blueflower, returns name of the log file"""
+    global RGX_INFILE
+    global RGX_INFILENAME
+
     if not os.path.exists(path):
         raise BFException('%s does not exist' % path)
 
@@ -271,6 +277,19 @@ def blueflower(path, hashesfile, pwd):
             get_hashes(hashesfile, pwd)
         except BFException as e:
             raise
+
+    # precompile the regexes
+    rgx_infile = '|'.join(INFILE)
+    try:
+        RGX_INFILE = re.compile(rgx_infile, re.IGNORECASE)
+    except re.error:
+        raise BFException('invalid infile regex %s' % rgx_infile)
+    rgx_infilename = '|'.join(INFILENAME)
+    try:
+        RGX_INFILENAME = re.compile(rgx_infilename, re.IGNORECASE)
+    except re.error:
+        raise BFException('invalid infilename regex %s' % rgx_infilename)
+
 
     count = init(path)
     scan(path, count)
