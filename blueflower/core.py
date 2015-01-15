@@ -140,6 +140,8 @@ def scan(path, count):
     bar_width = 32
     if count < bar_width:
         bar_width = count
+    if count == 0:
+        bar_width = 1
     sys.stdout.write('%s\n' % ("=" * (bar_width)))
     bar_blocksize = count/bar_width
     bar_left = bar_width
@@ -193,8 +195,7 @@ def bye():
 
 
 def banner():
-    flower = 'starting %s-%s'  % (PROGRAM, __version__)
-    print flower
+    print 'starting %s-%s'  % (PROGRAM, __version__)
 
 
 def signal_handler(*_):
