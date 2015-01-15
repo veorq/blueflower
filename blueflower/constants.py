@@ -45,7 +45,7 @@ INFILENAME = (
     '\.kwallet',        # kwallet
     '\.ovpn',           # OpenVPN config
     '\.psafe3',         # passwordsafe
-    '\.pfx'.            # PRX-format keys
+    '\.pfx',            # PRX-format keys
     'cert8.db',         # mozilla
     'connect.inc',      # sql
     'default\.pass',    # dbman
