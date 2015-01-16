@@ -47,6 +47,7 @@ INFILENAME = (
     '\.ovpn',           # OpenVPN config
     '\.psafe3',         # passwordsafe
     '\.p12',            # PKCS12 data
+    '\.p15',            # PKCS15 tokens
     '\.pfx',            # PRX-format keys
     'cert8.db',         # mozilla
     'connect.inc',      # sql
@@ -59,6 +60,7 @@ INFILENAME = (
     'key3.db',          # mozilla
     'localconf',        # typo3
     'localsettings',    # wikimedia
+    'netrc',            # ~/.netrc
     'otr.fingerprints', # libpurple otr fingerprints
     'otr.private_key',  # libpurple otr keys
     'passlist',         # misc
