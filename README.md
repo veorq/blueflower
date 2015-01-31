@@ -108,8 +108,6 @@ unzipped eggs rather than as `.egg` files (easy_install option
 
 
 
-
-
 Hashes file
 -----------
 
@@ -117,7 +115,7 @@ Let's say you have a list of strings that you want to search for without
 revealing them. These could be names, passwords, secret keys, etc.
 
 blueflower implements this feature, by taking as optional argument a
-list of hashes.
+list of hashes (`-H hashesfile`).
 Obviously this comes with a performance penalty: hashing all strings
 matching the regular expression given.
  
@@ -128,9 +126,9 @@ First, put your secret strings in a text file with one item per line,
 for example
 
 ```
-banana1
-banana2
-banana3
+secret1
+secret2
+secret3
 ```
 
 Then, run 
@@ -143,7 +141,7 @@ which will prompt you for
 * a password, which will be needed to run blueflower
 
 This will create a file `yourfile.hashes` in the same directory as
-`yourfile`, to give as a second argument to blueflower.
+`yourfile`, to give as an argument to blueflower.
 
 
 ### Format
@@ -187,7 +185,7 @@ This should be slow enough to mitigate bruteforce attacks, and the use of
 a salt makes precomputation useless.
 
 SipHash-1000-20000 was chosen rather than a dedicated password hashing
-scheme (bcrypt/scrypt/PBKDF2) to preserve simplicity, minimize
+scheme (bcrypt/scrypt/PBKDF2) for simplicity, to minimize
 dependencies, and because the GPU-friendliness of SipHash can be
 compensated by really slow hashing.
 
@@ -204,7 +202,7 @@ However keys are 128-bit, and thus practically unbreakable.
 Again, the use of a salt makes precomputation useless.
 
 The use of a same salt for both key derivation and verifier generation
-might look surprising, but it does not reduce security since different
+might be surprising, but it does not reduce security since different
 hash functions are used, and the unpredictability property is not
 affected.
 
