@@ -134,9 +134,7 @@ def init(path):
 def scan(path, count):
     """selects files to process, checks file names"""
     log_comment('scanning files...')
-
     scanned = 0
-
     bar_width = 32
     if count < bar_width:
         bar_width = count
@@ -158,8 +156,8 @@ def scan(path, count):
                 log_secret(res.group(), abspath)
 
             try:
-                (ftype, supported) = type_file(abspath)
-            except TypeError:
+                ftype, supported = type_file(abspath)
+            except TypeError as e:
                 log_error(str(e), abspath)
                 continue
 
@@ -217,16 +215,12 @@ def main():
         help='hashes file password (optional, interactive prompt otherwise)')
 
     args = parser.parse_args()
-
     path = args.path
-    # = None if argument missing
-    hashesfile = args.H
+    hashesfile = args.H  # = None if argument missing
 
     if hashesfile:
-        # = None if argument missing
-        pwd = args.p
+        pwd = args.p  # = None if argument missing
         if not pwd:
-            # prompt for password
             pwd = getpass.getpass('password: ')
     else:
         pwd = ''
@@ -251,10 +245,8 @@ def blueflower(path, hashesfile, pwd):
     if not os.path.exists(path):
         raise BFException('%s does not exist' % path)
 
-    if hashesfile:
-        if not os.path.exists(hashesfile):
-            raise BFException('%s does not exist' % hashesfile)
-
+    if hashesfile and not os.path.exists(hashesfile):
+        raise BFException('%s does not exist' % hashesfile)
 
     logfile = '%s-%s.csv' % (PROGRAM, timestamp())
 
@@ -276,7 +268,7 @@ def blueflower(path, hashesfile, pwd):
     if hashesfile and pwd:
         try:
             get_hashes(hashesfile, pwd)
-        except BFException as e:
+        except BFException:
             raise
 
     # precompile the regexes
@@ -291,7 +283,7 @@ def blueflower(path, hashesfile, pwd):
     except re.error:
         raise BFException('invalid infilename regex %s' % rgx_infilename)
 
-
+    # start slow operations
     count = init(path)
     scan(path, count)
     count_logged(logfile)

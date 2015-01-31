@@ -18,7 +18,7 @@
 
 PROGRAM = 'blueflower'
 
-# regexes, enter string in lowercase for insensitive matching 
+# regexes, enter string in lowercase for insensitive matching
 INFILE = (
     '^begin certificate',
     '^passphrase',

@@ -18,11 +18,10 @@
 
 import io
 import os
-import re
 import tarfile
 
 from blueflower.do import do_data
-from blueflower.constants import ENCRYPTED, INFILENAME
+from blueflower.constants import ENCRYPTED
 from blueflower.types import type_data
 from blueflower.utils.log import log_encrypted, log_error, log_secret
 from blueflower.core import RGX_INFILENAME

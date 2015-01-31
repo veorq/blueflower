@@ -16,7 +16,6 @@
 # along with blueflower.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import io
 import os
 import bz2
 

@@ -20,7 +20,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-class SipHash:
+class SipHash(object):
     def __init__(self, c=2, d=4):
         assert c >= 0
         assert d >= 0
@@ -71,7 +71,7 @@ class SipHash:
         self._msg.append(s)
 
     def _rotl(self, v, r):
-        return (((v << r) & self._mask) | (v >> (64 - r)))
+        return ((v << r) & self._mask) | (v >> (64 - r))
 
     def _sip_round(self):
         self._v[0] += self._v[1]

@@ -18,11 +18,10 @@
 
 import io
 import os
-import re
 import zipfile
 
 from blueflower.do import do_data
-from blueflower.constants import BF_ZIP, ENCRYPTED, INFILENAME
+from blueflower.constants import BF_ZIP, ENCRYPTED
 from blueflower.types import type_data
 from blueflower.utils.log import log_encrypted, log_error, log_secret
 from blueflower.core import RGX_INFILENAME
