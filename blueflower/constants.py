@@ -20,15 +20,16 @@ PROGRAM = 'blueflower'
 
 # regexes, enter string in lowercase for insensitive matching
 INFILE = (
-    '^begin certificate',
-    '^passphrase',
-    '^password',
-    '^private[ -_]key',
-    '^privatekey',
-    '^rsakeypair',
-    '^secret[ -_]key',
-    '^secretkey',
-    '^sshhostkeys',
+    'begin certificate',
+    'begin pgp message',
+    'passphrase',
+    'password',
+    'private[ -_]key',
+    'privatekey',
+    'rsakeypair',
+    'secret[ -_]key',
+    'secretkey',
+    'sshhostkeys',
 )
 
 # regexes, case insensitive

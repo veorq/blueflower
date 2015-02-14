@@ -18,7 +18,6 @@
 
 import os
 
-
 from blueflower.utils.log import log_error
 import blueflower.constants as const
 
@@ -64,8 +63,10 @@ def type_from_extension(filename):
     return (const.BF_UNKNOWN, False)
 
 
-def find_type(data, afile=''):
-    """guess a file's type based on signature and extension"""
+def type_data(data, afile=''):
+    """guess an in-memory file's type
+       optional file name (as found in archive or decompressed)
+    """
     (ftype, supported) = type_from_extension(afile)
     if supported:
         return (ftype, supported)
@@ -74,19 +75,18 @@ def find_type(data, afile=''):
     return type_from_signature(data[:MAX_SIG_LEN])
 
 
-def type_data(data, afile=''):
-    """guess an in-memory file's type
-       optional file name (as found in archive or decompressed)
-    """
-    return find_type(data, afile)
-
-
 def type_file(afile):
     """guess a file's type"""
+    # optimize for speed: prioritize extension over signature
+    (ftype, supported) = type_from_extension(afile)
+    if supported:
+        return (ftype, supported)
     try:
         fin = open(afile)
     except IOError as e:
         log_error(str(e), afile)
         return
     data = fin.read(MAX_LEN)
-    return find_type(data, afile)
+    if is_text(data[:MAX_LEN]):
+        return (const.BF_TEXT, True)
+    return type_from_signature(data[:MAX_SIG_LEN])
