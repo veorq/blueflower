@@ -1,4 +1,4 @@
-# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
+# copyright (c) 2014-15 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 #

@@ -1,4 +1,4 @@
-# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
+# copyright (c) 2014-15 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 #
@@ -30,7 +30,8 @@ from blueflower.do import do_file
 from blueflower.types import type_file
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
 from blueflower.utils.log import log_comment, log_encrypted, log_error, \
-    log_secret, timestamp
+    log_secret, log_exe, log_packed, timestamp
+from blueflower.utils.heuristics import looks_uniform
 
 
 HASHES = frozenset()
@@ -164,10 +165,13 @@ def scan(path, count):
             if supported:
                 if ftype in ENCRYPTED:  
                     # report but do not process
-                    log_encrypted(ftype, filename)
+                    log_encrypted(ftype, abspath)
                 if ftype in EXE:  
                     # report but do not process
-                    log_exe(ftype, filename)
+                    if looks_uniform(filename=abspath):
+                        log_packed(ftype, abspath)
+                    else:
+                        log_exe(ftype, abspath)
                 else:
                     # process the file
                     do_file(ftype, abspath)
@@ -182,18 +186,20 @@ def scan(path, count):
                 bar_left -= 1
 
     sys.stdout.write("\n")
-    log_comment('%d files supported have been processed' % scanned)
+    log_comment('%d files supported were processed' % scanned)
     return scanned
 
 
 def count_logged(logfile):
     logs = open(logfile).read()
     secrets = logs.count('SECRET,')
-    log_comment('%d files or strings flagged as secret' % secrets)
+    log_comment('%d files or strings may contain secrets' % secrets)
     encrypted = logs.count('ENCRYPTED,')
-    log_comment('%d files or strings flagged as encrypted' % encrypted)
+    log_comment('%d files look encrypted' % encrypted)
     exe = logs.count('EXE,')
-    log_comment('%d files or strings flagged as executable' % exe)
+    packed = logs.count('EXE PACKED,')
+    log_comment('%d files look executable (including %d packed)' % \
+        (exe+packed, packed))
 
 
 def bye():

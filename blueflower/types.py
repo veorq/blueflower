@@ -1,4 +1,4 @@
-# copyright (c) 2014 JP Aumasson <jeanphilippe.aumasson@gmail.com>
+# copyright (c) 2014-15 JP Aumasson <jeanphilippe.aumasson@gmail.com>
 #
 # This file is part of blueflower.
 #
@@ -33,7 +33,6 @@ SIGNATURES_DICT = {
 }
 
 MAX_LEN = 1024  # to determine whether text or binary
-
 MAX_SIG_LEN = max(len(x) for x in SIGNATURES_DICT)
 
 
@@ -88,6 +87,7 @@ def type_file(filename):
         log_error(str(e), filename)
         return
     data = fin.read(MAX_LEN)
+    fin.close()
     if is_text(data[:MAX_LEN]):
         return (const.BF_TEXT, True)
     return type_from_signature(data[:MAX_SIG_LEN])

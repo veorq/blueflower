@@ -29,6 +29,7 @@ Features
       keychain, Java KeyStore, etc.) 
     - common encrypted containers (Truecrypt, PGP Disks, GnuPG files,
       encrypted ZIPs, etc.)
+    - executables (PE, ELF, with heuristical packing detection)
     - other interesting files (Bitcoin wallets, PGP policies, etc.)
 * *hiding* of secrets searched for (names, secret keys, etc.) via a hash
   file
