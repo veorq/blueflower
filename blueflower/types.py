@@ -17,6 +17,7 @@
 
 
 import os
+import string
 
 from blueflower.utils.log import log_error
 import blueflower.constants as const
@@ -35,12 +36,10 @@ MAX_LEN = 1024  # to determine whether text or binary
 
 MAX_SIG_LEN = max(len(x) for x in SIGNATURES_DICT)
 
-TEXTCHARS = ''.join(map(chr, [7, 8, 9, 10, 12, 13, 27] + range(0x20, 0x100)))
-
 
 def is_text(data):
     """True if data is text content, False otherwise"""
-    return not bool(data.translate(None, TEXTCHARS))
+    return not bool(data.translate(None, string.printable))
 
 
 def type_from_signature(first_bytes):
