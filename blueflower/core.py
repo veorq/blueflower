@@ -55,15 +55,15 @@ def get_hashes(hashesfile, pwd):
     fin = open(hashesfile)
     regex = fin.readline().rstrip('\n')
     try:
-        (salt, verifier_file) = fin.readline().rstrip('\n').split(',')
+        (salt, verifier_from_file) = fin.readline().rstrip('\n').split(',')
     except ValueError:
         raise BFException('failed to extract verifier and salt')
 
-    (key, verifier_pwd, salt) = key_derivation(pwd, salt)
+    (key, verifier_from_pwd, salt) = key_derivation(pwd, salt)
 
     fail = False
 
-    if verifier_pwd != verifier_file:
+    if verifier_from_pwd != verifier_from_file:
         log_comment('verifier does not match (incorrect password?)')
         fail = True
     else:
@@ -105,7 +105,7 @@ def get_hashes(hashesfile, pwd):
 
 
 def init(path):
-    """determinines size and number of files"""
+    """determines size and number of files"""
     log_comment('initializing...')
     total_size = 0
     count = 0
@@ -140,8 +140,8 @@ def scan(path, count):
         bar_width = count
     if count == 0:
         bar_width = 1
-    sys.stdout.write('%s\n' % ("=" * (bar_width)))
-    bar_blocksize = count/bar_width
+    sys.stdout.write('%s\n' % ("=" * bar_width))
+    bar_blocksize = count / bar_width
     bar_left = bar_width
     bar_count = 0
 
@@ -162,11 +162,14 @@ def scan(path, count):
                 continue
 
             if supported:
-                if ftype in ENCRYPTED:  # report but do not process
+                if ftype in ENCRYPTED:  
+                    # report but do not process
                     log_encrypted(ftype, afile)
                 else:
+                    # process the file
                     do_file(ftype, abspath)
                     scanned += 1
+
             # update progress bar
             bar_count += 1
             if bar_count >= bar_blocksize and bar_left:
@@ -207,7 +210,7 @@ def main():
     """main function"""
     parser = argparse.ArgumentParser(description='blueflower\
         <https://github.com/veorq/blueflower>')
-    parser.add_argument('path',\
+    parser.add_argument('path', 
         help='directory to explore')
     parser.add_argument('-H', metavar='hashesfile', required=False,\
         help='hashes file')
