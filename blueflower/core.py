@@ -114,13 +114,13 @@ def init(path):
         for skip in SKIP:
             if skip in dirs:
                 dirs.remove(skip)
-        for afile in files:
-            apath = os.path.join(root, afile)
+        for filename in files:
+            apath = os.path.join(root, filename)
             count += 1
             try:
                 total_size += os.path.getsize(apath)
             except OSError as e:
-                log_error(str(e), afile)
+                log_error(str(e), filename)
 
     readable = total_size
 
@@ -149,9 +149,9 @@ def scan(path, count):
         for skip in SKIP:
             if skip in dirs:
                 dirs.remove(skip)
-        for afile in files:
-            abspath = os.path.abspath(os.path.join(root, afile))
-            res = RGX_INFILENAME.search(afile.lower())
+        for filename in files:
+            abspath = os.path.abspath(os.path.join(root, filename))
+            res = RGX_INFILENAME.search(filename.lower())
             if res:
                 log_secret(res.group(), abspath)
 
@@ -164,7 +164,7 @@ def scan(path, count):
             if supported:
                 if ftype in ENCRYPTED:  
                     # report but do not process
-                    log_encrypted(ftype, afile)
+                    log_encrypted(ftype, filename)
                 else:
                     # process the file
                     do_file(ftype, abspath)

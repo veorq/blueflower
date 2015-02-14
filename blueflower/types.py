@@ -63,11 +63,11 @@ def type_from_extension(filename):
     return (const.BF_UNKNOWN, False)
 
 
-def type_data(data, afile=''):
+def type_data(data, filename=''):
     """guess an in-memory file's type
        optional file name (as found in archive or decompressed)
     """
-    (ftype, supported) = type_from_extension(afile)
+    (ftype, supported) = type_from_extension(filename)
     if supported:
         return (ftype, supported)
     if is_text(data[:MAX_LEN]):
@@ -75,16 +75,16 @@ def type_data(data, afile=''):
     return type_from_signature(data[:MAX_SIG_LEN])
 
 
-def type_file(afile):
+def type_file(filename):
     """guess a file's type"""
     # optimize for speed: prioritize extension over signature
-    (ftype, supported) = type_from_extension(afile)
+    (ftype, supported) = type_from_extension(filename)
     if supported:
         return (ftype, supported)
     try:
-        fin = open(afile)
+        fin = open(filename)
     except IOError as e:
-        log_error(str(e), afile)
+        log_error(str(e), filename)
         return
     data = fin.read(MAX_LEN)
     if is_text(data[:MAX_LEN]):
