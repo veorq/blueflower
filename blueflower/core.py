@@ -25,7 +25,7 @@ import signal
 import sys
 
 from blueflower import __version__
-from blueflower.constants import ENCRYPTED, INFILE, INFILENAME, PROGRAM, SKIP
+from blueflower.constants import ENCRYPTED, EXE, INFILE, INFILENAME, PROGRAM, SKIP
 from blueflower.do import do_file
 from blueflower.types import type_file
 from blueflower.utils.hashing import key_derivation, HASH_BYTES
@@ -165,6 +165,9 @@ def scan(path, count):
                 if ftype in ENCRYPTED:  
                     # report but do not process
                     log_encrypted(ftype, filename)
+                if ftype in EXE:  
+                    # report but do not process
+                    log_exe(ftype, filename)
                 else:
                     # process the file
                     do_file(ftype, abspath)
@@ -186,9 +189,11 @@ def scan(path, count):
 def count_logged(logfile):
     logs = open(logfile).read()
     secrets = logs.count('SECRET,')
-    log_comment('%d files or strings flagged as "secret"' % secrets)
+    log_comment('%d files or strings flagged as secret' % secrets)
     encrypted = logs.count('ENCRYPTED,')
-    log_comment('%d files or strings flagged as "encrypted"' % encrypted)
+    log_comment('%d files or strings flagged as encrypted' % encrypted)
+    exe = logs.count('EXE,')
+    log_comment('%d files or strings flagged as executable' % exe)
 
 
 def bye():

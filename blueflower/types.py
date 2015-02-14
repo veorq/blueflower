@@ -27,6 +27,8 @@ SIGNATURES_DICT = {
     '\x25\x50\x44\x46': const.BF_PDF,
     '\x42\x5a\x68': const.BF_BZIP2,
     '\x50\x4b\x03\x04': const.BF_ZIP,
+    '\x5a\x4d': const.BF_PE, 
+    '\x7f\x45\x4c\x46': const.BF_ELF, 
 }
 
 MAX_LEN = 1024  # to determine whether text or binary

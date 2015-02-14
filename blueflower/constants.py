@@ -88,16 +88,18 @@ SKIP = (
 
 BF_BZIP2 = 'bzip2'
 BF_DOCX = 'docx'
+BF_ELF = 'elf'
+BF_GPG = 'gpg'
 BF_GZ = 'gz'
 BF_PDF = 'pdf'
+BF_PE = 'pe'
+BF_PGD = 'pgd'
+BF_PGP = 'pgp'
 BF_TAR = 'tar'
 BF_TEXT = 'text'
-BF_ZIP = 'zip'
-BF_PGP = 'pgp'
-BF_PGD = 'pgd'
-BF_GPG = 'gpg'
 BF_TRUECRYPT = 'truecrypt'
 BF_XLSX = 'xlsx'
+BF_ZIP = 'zip'
 
 BF_UNKNOWN = 'unknown'
 
@@ -116,4 +118,9 @@ ENCRYPTED = (
     BF_PGD,
     BF_PGP,
     BF_TRUECRYPT,
+)
+
+EXE = (
+    BF_ELF,
+    BF_PE,
 )
