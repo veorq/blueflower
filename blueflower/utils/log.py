@@ -25,7 +25,7 @@ def log(message):
 
 
 def log_comment(comment):
-    message = '%s: %s' % (timestamp(), comment)
+    message = '%s' % (comment)
     print message
 
 

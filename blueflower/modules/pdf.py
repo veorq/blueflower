@@ -24,7 +24,7 @@ from blueflower.utils.log import log_error
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfpage import PDFPage, PDFTextExtractionNotAllowed
 
 
 def pdf_do_pdf(astream, afile):
@@ -34,10 +34,14 @@ def pdf_do_pdf(astream, afile):
     device = TextConverter(rsrcmgr, outstream, codec='utf-8', laparams=laparams,
                                imagewriter=None)
     interpreter = PDFPageInterpreter(rsrcmgr, device)
-    for page in PDFPage.get_pages(astream, set(),
-                                  maxpages=0, password='',
-                                  caching=True, check_extractable=True):
-        interpreter.process_page(page)
+    try:
+        for page in PDFPage.get_pages(astream, set(),
+                                      maxpages=0, password='',
+                                      caching=True, check_extractable=True):
+            interpreter.process_page(page)
+    except PDFTextExtractionNotAllowed as e:
+        log_error(str(e), afile)
+        return
     text = outstream.getvalue()
     text_do_data(text, afile)
     outstream.close()

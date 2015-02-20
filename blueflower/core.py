@@ -134,7 +134,7 @@ def init(path):
 
 def scan(path, count):
     """selects files to process, checks file names"""
-    log_comment('scanning files...')
+    log_comment('scanning %s:' % path)
     scanned = 0
     bar_width = 32
     if count < bar_width:
@@ -207,7 +207,7 @@ def bye():
 
 
 def banner():
-    print 'starting %s-%s'  % (PROGRAM, __version__)
+    print 'starting %s v%s'  % (PROGRAM, __version__)
 
 
 def signal_handler(*_):
