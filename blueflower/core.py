@@ -227,10 +227,13 @@ def main():
         help='hashes file')
     parser.add_argument('-p', metavar='password',\
         help='hashes file password (optional, interactive prompt otherwise)')
+    parser.add_argument('-o', metavar='output_file',required=False,\
+        help='directory to save the log file')
 
     args = parser.parse_args()
     path = args.path
     hashesfile = args.H  # = None if argument missing
+    output_file = args.o
 
     if hashesfile:
         pwd = args.p  # = None if argument missing
@@ -242,7 +245,7 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
 
     try:
-        blueflower(path, hashesfile, pwd)
+        blueflower(path, hashesfile, pwd, output_file)
     except BFException as e:
         print str(e)
         parser.print_usage()
@@ -251,7 +254,7 @@ def main():
     return 0
 
 
-def blueflower(path, hashesfile, pwd):
+def blueflower(path, hashesfile, pwd, output_file):
     """runs blueflower, returns name of the log file"""
     global RGX_INFILE
     global RGX_INFILENAME
@@ -262,7 +265,13 @@ def blueflower(path, hashesfile, pwd):
     if hashesfile and not os.path.exists(hashesfile):
         raise BFException('%s does not exist' % hashesfile)
 
-    logfile = '%s-%s.csv' % (PROGRAM, timestamp())
+    if output_file:
+        if os.path.basename(output_file):
+            logfile = output_file
+        else:
+            logfile = output_file + '/%s-%s.csv' % (PROGRAM, timestamp())
+    else:
+        logfile = '%s-%s.csv' % (PROGRAM, timestamp())
 
     # reset any existing logger
     logger = logging.getLogger()
