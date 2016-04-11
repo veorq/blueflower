@@ -38,6 +38,10 @@ INFILE = (
 # extensions of encrypted containers in types_from_extension
 # if extension is missing, type may be detected in types_from_signature
 INFILENAME = (
+    '\.bek',            # bitlocker
+    '\.tpm',            # bitlocker
+    '\.fve',            # bitlocker
+    '\.asc',            # ascii keys/messages
     '\.crt',            # certs
     '\.jks',            # java key store
     '\.kdb',            # keypass (matches .kdbx)
