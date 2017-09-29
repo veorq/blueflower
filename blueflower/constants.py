@@ -24,10 +24,10 @@ INFILE = (
     'begin pgp message',
     'passphrase',
     'password',
-    'private[ -_]key',
+    'private[ _-]key',
     'privatekey',
     'rsakeypair',
-    'secret[ -_]key',
+    'secret[ _-]key',
     'secretkey',
     'sshhostkeys',
 )
