@@ -229,10 +229,13 @@ def main():
         help='hashes file password (optional, interactive prompt otherwise)')
     parser.add_argument('-o', metavar='output_file',required=False,\
         help='directory to save the log file')
+    parser.add_argument('-d', metavar='dictionaryfile', required=False,\
+        help='dictionary file')
 
     args = parser.parse_args()
     path = args.path
     hashesfile = args.H  # = None if argument missing
+    dictionaryfile = args.d # = None if argument missing
     output_file = args.o
 
     if hashesfile:
@@ -245,7 +248,7 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
 
     try:
-        blueflower(path, hashesfile, pwd, output_file)
+        blueflower(path, hashesfile, dictionaryfile, pwd, output_file)
     except BFException as e:
         print str(e)
         parser.print_usage()
@@ -254,7 +257,7 @@ def main():
     return 0
 
 
-def blueflower(path, hashesfile, pwd, output_file):
+def blueflower(path, hashesfile, dictionaryfile, pwd, output_file):
     """runs blueflower, returns name of the log file"""
     global RGX_INFILE
     global RGX_INFILENAME
@@ -265,13 +268,16 @@ def blueflower(path, hashesfile, pwd, output_file):
     if hashesfile and not os.path.exists(hashesfile):
         raise BFException('%s does not exist' % hashesfile)
 
+    if dictionaryfile and not os.path.exists(dictionaryfile):
+        raise BFException('%s does not exist' % dictionaryfile)
+
     if output_file:
-        if os.path.basename(output_file):
+        if os.path.isfile(output_file):
             logfile = output_file
         else:
-            logfile = output_file + '/%s-%s.csv' % (PROGRAM, timestamp())
+            logfile = output_file + '/%s-%s-%s.csv' % (PROGRAM, os.path.basename(os.path.normpath(path)), timestamp())
     else:
-        logfile = '%s-%s.csv' % (PROGRAM, timestamp())
+        logfile = '%s-%s-%s.csv' % (PROGRAM, os.path.basename(os.path.normpath(path)), timestamp())
 
     # reset any existing logger
     logger = logging.getLogger()
@@ -294,8 +300,15 @@ def blueflower(path, hashesfile, pwd, output_file):
         except BFException:
             raise
 
+    # read the dictionary and add to INFILE
+    if(dictionaryfile):
+        extradictionary = load_dictionary_file(dictionaryfile)
+    else:
+        extradictionary=[]
+
     # precompile the regexes
-    rgx_infile = '|'.join(INFILE)
+    rgx_infile = '|'.join(set(INFILE) | set(extradictionary))
+    log_comment(rgx_infile)
     try:
         RGX_INFILE = re.compile(rgx_infile, re.IGNORECASE)
     except re.error:
@@ -312,3 +325,15 @@ def blueflower(path, hashesfile, pwd, output_file):
     count_logged(logfile)
 
     return logfile
+
+def load_dictionary_file(afile):
+    log_comment('adding custom dictionary %s to infile' % afile)
+    try:
+        fid = open(afile)
+    except IOError as e:
+        log_error(str(e), afile)
+        return
+    data = fid.read().lower()
+    fid.close()
+    return data.splitlines()
+    
