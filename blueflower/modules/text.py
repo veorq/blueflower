@@ -17,11 +17,12 @@
 
 
 import re
+import io
+import csv
 
-from blueflower.constants import INFILE
-from blueflower.core import HASHES, HASH_KEY, HASH_REGEX
+from blueflower.core import HASHES, HASH_KEY, HASH_REGEX, RGX_INFILE
 from blueflower.utils.hashing import hash_string
-from blueflower.utils.log import log_secret, log_error
+from blueflower.utils.log import log_secret, log_error, log_comment
 
 
 def search_hashes(text, afile):
@@ -33,12 +34,40 @@ def search_hashes(text, afile):
 
 def text_do_text(text, afile):
     """text: lowercase test, afile: source file name """
-    regex = '|'.join(INFILE)
-    for match in re.finditer(regex, text):
-        log_secret(match.group(), afile)
+    loggedFilename = False
+    lines = text.splitlines()
+    for lineno in range(len(lines)):
+        line = lines[lineno]
+        for match in re.finditer(RGX_INFILE, line):
+            start = match.start()
+            offset = start - text.rfind('\n', 0, start)
+            wrd = match.group(0)
+
+            if not loggedFilename:
+                log_secret("")
+                log_secret("%s" % (afile))
+                loggedFilename = True
+            log_secret(",%s,%s,%s" % (lineno, offset, wrd))
+     
+            if len(lines) > lineno - 2 and 0 < lineno -2 :
+                log_text_and_line_number((lineno - 2), lines[lineno-2])
+            if len(lines) > lineno - 1 and 0 < lineno -1:
+                log_text_and_line_number((lineno - 1), lines[lineno-1])
+            log_text_and_line_number(lineno,lines[lineno])
+            if len(lines) > lineno + 1:
+                log_text_and_line_number((lineno + 1), lines[lineno+1])
+            if len(lines) > lineno + 2:
+                log_text_and_line_number((lineno + 2), lines[lineno+2])
+
+        #log_secret(match.group(), afile)
     if HASHES:
         search_hashes(text, afile)
 
+def log_text_and_line_number(lineno, text):
+    output = io.BytesIO()
+    writer = csv.writer(output)
+    writer.writerow([text])
+    log_secret(",,,,%s %s" % (lineno, output.getvalue().splitlines()[0]))
 
 def text_do_data(data, afile):
     text = data.lower()
@@ -54,3 +83,4 @@ def text_do_file(afile):
     data = fid.read().lower()
     fid.close()
     text_do_data(data, afile)
+
