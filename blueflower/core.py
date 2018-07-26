@@ -35,7 +35,6 @@ from blueflower.utils.heuristics import looks_uniform
 
 
 HASHES = frozenset()
-HASH_KEY = 0
 HASH_REGEX = ''
 
 # compiled regexes used by modules
@@ -46,11 +45,12 @@ RGX_INFILENAME = re.compile('')
 class BFException(Exception):
     pass
 
+def fail():
+    raise BFException('hashes file failed to verify')
 
 def get_hashes(hashesfile, pwd):
     """create hashes list from hashesfile using the given password"""
     global HASHES
-    global HASH_KEY
     global HASH_REGEX
     log_comment('verifying hashes file %s...' % hashesfile)
     fin = open(hashesfile)
@@ -62,41 +62,42 @@ def get_hashes(hashesfile, pwd):
 
     (key, verifier_from_pwd, salt) = key_derivation(pwd, salt)
 
-    fail = False
-
     if verifier_from_pwd != verifier_from_file:
         log_comment('verifier does not match (incorrect password?)')
-        fail = True
+        fail()
     else:
-        HASH_KEY = key
         HASH_REGEX = regex
 
     try:
         re.compile(regex)
     except re.error:
         log_comment('invalid regex')
-        fail = True
+        fail()
 
     # file pointer is now at the 3rd line:
     hashes = []
 
     for line in fin:
-        ahash = line.strip()
+        hash_line = line.strip().split(',')
+        ahash = hash_line[0]
+        if len(hash_line) != 2:
+            log_comment('Missing salt for this secret: %s' % ahash)
+            fail()
+
+        ahash_salt = hash_line[1]
+        ahash_key, _, _ = key_derivation(pwd, ahash_salt)
+
         if len(ahash) != 2*HASH_BYTES:
             log_comment('invalid hash length (%d bytes): %s' %
                         (len(ahash), ahash))
-            fail = True
+            fail()
         # check that the hash is an hex value
         try:
             int(ahash, 16)
         except ValueError:
             log_comment('invalid hash value: %s' % ahash)
-            fail = True
-        if not fail:
-            hashes.append(ahash)
-
-    if fail:
-        raise BFException('hashes file failed to verify')
+            fail()
+        hashes.append((ahash, ahash_key))
 
     # record hashes and key, notifies of duplicates
     HASHES = frozenset(hashes)

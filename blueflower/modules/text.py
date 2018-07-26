@@ -19,16 +19,17 @@
 import re
 
 from blueflower.constants import INFILE
-from blueflower.core import HASHES, HASH_KEY, HASH_REGEX
+from blueflower.core import HASHES, HASH_REGEX
 from blueflower.utils.hashing import hash_string
 from blueflower.utils.log import log_secret, log_error
 
 
 def search_hashes(text, afile):
     for match in re.finditer(HASH_REGEX, text):
-        ahash = hash_string(match.group(0), HASH_KEY)
-        if ahash in HASHES:
-            log_secret('hash %s' % ahash, afile)
+        for secret_hash, key in HASHES:
+            ahash = hash_string(match.group(0), key)
+            if ahash == secret_hash:
+                log_secret('hash %s' % ahash, afile)
 
 
 def text_do_text(text, afile):
