@@ -48,7 +48,8 @@ def makehashes(path, regex, pwd):
     with open(path) as fin:
         for line in fin:
             linestring = line.rstrip('\n').strip()
-            towrite = '%s\n' % hash_string(linestring, key)
+            (per_secret_key, _, per_secret_salt) = key_derivation(pwd)
+            towrite = '%s,%s\n' % (hash_string(linestring, per_secret_key), per_secret_salt)
             fout.write(towrite)
     fout.close()
 
