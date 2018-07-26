@@ -163,16 +163,19 @@ one, by checking that hashing the salt using the password entered yields
 a value identical to the verifier.
 
 The subsequent lines include the SipHash-2-2 hashes of each of the
-secret strings, in the same order as received, using the verified key.
+secret strings, in the same order as received, and the secret-specific
+salt used to derive the key for this secret.
 
 For example, the first 5 lines of a `.hashes` file can be 
 
 ```
 \b[a-z]{2,20}\b
-694d63f4630c6617,d478449c1a95f8c0
-06f12ba4c3b57a9f
-91f5ed23a2cc21ac
-381cd35a5d203fea
+f2b35da00d653516,18b51917bc4f7671
+4e6dddbd50eee4ae,48c9472c222f31a9
+342f9f7cbb565071,4fe45c69c8afa2b2
+5ee4ec1558e72b8e,f1c31af8a33e48f4
+dce68b650517c240,1e67aeef9c1d08d6
+fd7d6c441636c3c0,ee56273191c7f490
 ```
 
 ### Security 
