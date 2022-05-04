@@ -84,6 +84,23 @@ blueflower can then be called from any location, assuming that the
 binaries are located in a directory included in your PATH.
 
 
+#### Docker Container
+
+The program can also be installed and run via docker:
+Pull the image:
+```
+docker pull mkesenheimer/blueflower
+```
+
+Start the container and interact with it:
+```
+docker run -it --rm --name blueflower mkesenheimer/blueflower /bin/bash
+docker run -it --rm --name blueflower -v /path/to/directory/to/scan:/app/blueflower/target  mkesenheimer/blueflower /bin/bash
+root@computername:/app/blueflower# python ./blueflower.py --help
+root@computername:/app/blueflower# python ./blueflower.py target
+```
+
+
 ### Python-less execution on Windows
 
 To build a package executable on Windows machines that don't have Python
@@ -225,7 +242,6 @@ However,
 * the log file contains the name of the file including the secret string
 * one can easily modify blueflower to include the secrets detected in
   the log file
-
 
 
 Dependencies
